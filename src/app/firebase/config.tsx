@@ -38,4 +38,3 @@ let firebase_app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 export default firebase_app;
-const db = getFirestore(app);

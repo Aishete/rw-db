@@ -5,7 +5,7 @@ import { AuthContextProvider } from "../app/context/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 import { Toaster } from "@/components/ui/sonner";
-import { LogUsers } from "@/components/ui/LogUsers";
+import { LogUsers } from "@/components/ui/popup";
 
 export const metadata: Metadata = {
   title: "Create Next App",

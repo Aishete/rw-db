@@ -1,8 +1,9 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import React, { useState, FormEvent, useEffect } from "react";
 import signIn from "../../firebase/auth/signin";
 import { useRouter } from "next/navigation";
-import { LogUsers } from "@/components/ui/LogUsers";
+import { LogUsers } from "@/components/ui/popup";
 import {
   Card,
   CardContent,

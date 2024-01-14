@@ -7,7 +7,7 @@ import AcmeLogo from "@/components/ui/rw_db_logo";
 import React, { useEffect } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
-import { LogoutUsers } from "@/components/ui/LogUsers";
+import { LogoutUsers } from "@/components/ui/popup";
 
 interface PageProps {}
 
