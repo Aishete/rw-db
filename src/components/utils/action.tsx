@@ -1,5 +1,5 @@
 // Import the necessary modules
-"use server";
+
 import firebase_app from "@/app/firebase/config";
 import { setDoc, doc, getFirestore } from "firebase/firestore";
 import { v4 as uuid_v4 } from "uuid";
