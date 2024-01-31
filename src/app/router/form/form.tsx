@@ -157,7 +157,7 @@ export function ProfileForm() {
   };
   return (
     <Form {...form}>
-      <form action={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
             Candidate Information
