@@ -5,7 +5,7 @@ import { setDoc, doc, getFirestore } from "firebase/firestore";
 import { v4 as uuid_v4 } from "uuid";
 import { toast } from "sonner";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 export type FormValues = {
   referral: string;
   recuitercode: string;
@@ -21,8 +21,7 @@ export type FormValues = {
   village: string;
   CreateDate: Date;
 };
-
-export async function onSubmit(values: FormValues) {
+export default async function onSubmit(values: FormValues) {
   try {
     const db = getFirestore(firebase_app);
     const userId = uuid_v4();
@@ -44,16 +43,15 @@ export async function onSubmit(values: FormValues) {
       CreateDate: values.CreateDate,
     });
 
+    toast("You have Submitted");
     // Show a success messag
     // Clear the form
   } catch (error) {
     // Show an error message
+    toast("Something wrong, Please check your network and try again!!");
     console.error("Error adding/updating document:", error);
   }
-  revalidatePath("/home/candidate");
-  redirect("/home/candidate");
 }
-
 export type FormValuesR = {
   id: string;
   referral: string;

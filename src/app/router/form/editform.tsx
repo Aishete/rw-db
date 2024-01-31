@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { province, district } from "./formProvince";
-import { onSubmit } from "@/components/utils/action";
+import onSubmit from "@/components/utils/action";
 import { Candidate, fetchCandidateDataR } from "@/app/router/Data/data";
 
 import {
