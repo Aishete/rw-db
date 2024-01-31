@@ -134,8 +134,7 @@ const CandidateTable: React.FC = () => {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
-                      })}
-                      //{" "}
+                      })}{" "}
                     </TableCell>
                     <TableCell>{candidate.gender}</TableCell>
                     <TableCell>{candidate.province}</TableCell>
