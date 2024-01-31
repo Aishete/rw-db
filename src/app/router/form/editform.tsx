@@ -1,6 +1,5 @@
-"use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import React from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { useState, ChangeEvent } from "react";
@@ -14,6 +13,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { province, district } from "./formProvince";
 import { onSubmit } from "@/components/utils/action";
+import { Candidate, fetchCandidateDataR } from "@/app/router/Data/data";
 
 import {
   Form,
@@ -108,7 +108,34 @@ const formSchema = z.object({
   CreateDate: z.date(),
 });
 
-export function ProfileForm() {
+export function ProfileEditForm({ candidate }: { candidate: Candidate[] }) {
+  const [candidates, setCandidates] = useState([]);
+  const [candidateId, setCandidateId] = useState(""); // Initialize with a default value
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (candidateId !== "") {
+        try {
+          await fetchCandidateDataR(
+            candidateId,
+            setCandidates as Dispatch<SetStateAction<Candidate[]>>
+          );
+        } catch (error) {
+          console.error("Error fetching candidate data:", error);
+          // Handle error (e.g., redirect to an error page)
+        }
+      }
+    };
+
+    fetchData();
+  }, [candidateId]);
+  useEffect(() => {
+    if (candidate) {
+      const newCandidateId = candidate[0]?.id || "";
+      setCandidateId(newCandidateId);
+    }
+  }, [candidate]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -128,10 +155,6 @@ export function ProfileForm() {
     },
   });
 
-  interface SuccessToastProps {
-    message: string;
-  }
-
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
 
   const [stringDate, setStringDate] = React.useState<string>("");
@@ -145,19 +168,9 @@ export function ProfileForm() {
 
   const [openProvince, setOpenProvince] = useState(false);
   const [openDistrict, setOpenDistrict] = useState(false);
-  const [openCender, setOpenCender] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = () => {
-    setIsSubmitting(true);
-    // Perform form submission logic here
-
-    // After submission is complete, reset the form and enable the button
-    setIsSubmitting(false);
-  };
   return (
     <Form {...form}>
-      <form action={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
             Candidate Information
@@ -261,10 +274,7 @@ export function ProfileForm() {
               render={({ field }) => (
                 <FormItem className="flex flex-col sm:col-span-2">
                   <FormLabel>Gender</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Gender" />
                     </SelectTrigger>
@@ -286,13 +296,12 @@ export function ProfileForm() {
                 <FormItem className="flex flex-col sm:col-span-2">
                   <FormLabel>Date of birth</FormLabel>
                   <div className="relative w-[280px]">
-                    <Popover open={openCender} onOpenChange={setOpenCender}>
+                    <Popover>
                       <div className="relative w-[280px]">
                         <Input
                           placeholder="MM/DD/YYYY"
                           type="string"
                           value={stringDate}
-                          aria-expanded={openCender}
                           onChange={(e) => {
                             setStringDate(e.target.value);
                             const parsedDate = new Date(e.target.value);
@@ -302,7 +311,6 @@ export function ProfileForm() {
                             } else {
                               setErrorMessage("");
                               setDate(parsedDate);
-                              form.setValue("dateOfbirth", parsedDate);
                             }
                           }}
                         />
@@ -332,8 +340,6 @@ export function ProfileForm() {
                             setDate(selectedDate);
                             setStringDate(format(selectedDate, "MM/dd/yyyy"));
                             setErrorMessage("");
-                            form.setValue("dateOfbirth", selectedDate);
-                            setOpenCender(false);
                           }}
                           defaultMonth={date}
                           disabled={(date) =>
@@ -504,10 +510,7 @@ export function ProfileForm() {
           >
             Cancel
           </Link>
-
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit"}
-          </Button>
+          <Button type="submit">Submit</Button>
         </div>
       </form>
     </Form>

@@ -1,7 +1,8 @@
 import { clsx } from "clsx";
 import Link from "next/link";
 import { lusitana } from "@/components/ui/fonts";
-
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"] });
 interface Breadcrumb {
   label: string;
   href: string;
@@ -15,14 +16,17 @@ export default function Breadcrumbs({
 }) {
   return (
     <nav aria-label="Breadcrumb" className="mb-6 block">
-      <ol className={clsx(lusitana.className, "flex text-xl md:text-2xl")}>
+      <ol
+        className={clsx(
+          inter.className,
+          "mb-4 text-xl md:text-2xl flex h-15 items-end justify-start rounded-md bg-black shadow-2xl p-4 md:h-15 text-white"
+        )}
+      >
         {breadcrumbs.map((breadcrumb, index) => (
           <li
             key={breadcrumb.href}
             aria-current={breadcrumb.active}
-            className={clsx(
-              breadcrumb.active ? "text-gray-900" : "text-gray-500"
-            )}
+            className={clsx(breadcrumb.active ? "text-white" : "text-gray-400")}
           >
             <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
             {index < breadcrumbs.length - 1 ? (

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import React, { useState, FormEvent, useEffect } from "react";
 import signIn from "../../firebase/auth/signin";
 import { useRouter } from "next/navigation";
-import { LogUsers } from "@/components/ui/popup";
+
 import {
   Card,
   CardContent,
@@ -13,10 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuthContext } from "@/app/context/AuthContext";
-
-import { getAuth, signOut } from "firebase/auth";
-
-const auth = getAuth();
+import { Button } from "@/components/ui/button";
 
 interface PageSignInProps {}
 
@@ -27,7 +24,7 @@ const PageSignIn: React.FC<PageSignInProps> = () => {
   const { user } = useAuthContext();
 
   useEffect(() => {
-    if (user != null) router.push("/home");
+    if (user != null) router.push("/home/candidate");
   }, [user, router]);
 
   const handleForm = async (event: FormEvent) => {
@@ -43,7 +40,7 @@ const PageSignIn: React.FC<PageSignInProps> = () => {
 
     // Successful sign-in
     console.log(result);
-    router.push("/home");
+    router.push("/home/candidate");
   };
 
   return (
@@ -80,7 +77,9 @@ const PageSignIn: React.FC<PageSignInProps> = () => {
           </label>
         </CardContent>
         <CardFooter>
-          <LogUsers />
+          <Button className="w-full" type="submit">
+            Login
+          </Button>
         </CardFooter>
       </form>
     </Card>
@@ -88,12 +87,3 @@ const PageSignIn: React.FC<PageSignInProps> = () => {
 };
 
 export default PageSignIn;
-
-export async function signOutUser() {
-  try {
-    await signOut(auth);
-    return { success: true, error: null };
-  } catch (error) {
-    return { success: false, error };
-  }
-}

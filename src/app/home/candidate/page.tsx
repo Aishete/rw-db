@@ -2,6 +2,8 @@ import { AddCanadidate } from "@/app/ui/buttons";
 import Search from "@/components/ui/otherUI/search";
 // import Table from "@/components/ui/otherUI/table";
 import Pagination from "@/components/ui/otherUI/pagination";
+import { CandidateTable } from "@/components/ui/otherUI/table";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 export default async function Page({
   searchParams,
@@ -24,10 +26,12 @@ export default async function Page({
         Candidate
       </h1>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search invoices..." />
+        <Search placeholder="Search ..." />
         <AddCanadidate />
       </div>
+
       {/* <Table query={query} currentPage={currentPage} /> */}
+      <CandidateTable />
       <div className="mt-5 flex w-full justify-center">
         {/* <Pagination totalPages={totalPages} /> */}
       </div>

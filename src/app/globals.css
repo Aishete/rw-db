@@ -57,3 +57,8 @@
     @apply bg-background text-foreground;
   }
 }
+.custom-error-toast {
+  background-color: red; /* Change this to the color you want */
+  color: white; /* Text color for better contrast */
+  /* Add any other styling properties you need */
+}

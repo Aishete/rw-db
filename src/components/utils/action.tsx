@@ -1,17 +1,12 @@
+// Import the necessary modules
+"use server";
 import firebase_app from "@/app/firebase/config";
-import {
-  setDoc,
-  doc,
-  getFirestore,
-  collection,
-  getDoc,
-  getDocs,
-} from "firebase/firestore";
-import { v4 as uuid_v4 } from "uuid"; // import the uuid function
-const db = getFirestore(firebase_app);
+import { setDoc, doc, getFirestore } from "firebase/firestore";
+import { v4 as uuid_v4 } from "uuid";
 import { toast } from "sonner";
-
-interface FormValues {
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+export type FormValues = {
   referral: string;
   recuitercode: string;
   recuitername: string;
@@ -22,15 +17,17 @@ interface FormValues {
   gender: string;
   province: string;
   district: string;
+  commune: string;
   village: string;
-}
+  CreateDate: Date;
+};
 
 export async function onSubmit(values: FormValues) {
   try {
+    const db = getFirestore(firebase_app);
     const userId = uuid_v4();
-    const candidateRef = doc(db, "candidate", userId); // Use the generated userId as the document ID
+    const candidateRef = doc(db, "candidate", userId);
 
-    // Add a new document to the "candidate" collection with the generated userId
     await setDoc(candidateRef, {
       recuitercode: values.recuitercode,
       recuitername: values.recuitername,
@@ -42,11 +39,54 @@ export async function onSubmit(values: FormValues) {
       phone: values.phone,
       province: values.province,
       district: values.district,
+      commune: values.commune,
       village: values.village,
+      CreateDate: values.CreateDate,
     });
-    console.log(values);
-    toast("You have Submitted");
+
+    // Show a success messag
+    // Clear the form
   } catch (error) {
+    // Show an error message
+    console.error("Error adding/updating document:", error);
+  }
+  revalidatePath("/home/candidate");
+  redirect("/home/candidate");
+}
+
+export type FormValuesR = {
+  id: string;
+  referral: string;
+  recuitercode: string;
+  recuitername: string;
+  CreateDate: Date;
+};
+interface FormValuesRE {
+  referral: string;
+  recuitercode: string;
+  recuitername: string;
+  CreateDate: Date;
+}
+
+export async function onSubmitR(values: FormValuesRE) {
+  try {
+    const userId = uuid_v4();
+    const db = getFirestore(firebase_app);
+    const candidateRef = doc(db, "recruiter", userId);
+
+    await setDoc(candidateRef, {
+      recuitercode: values.recuitercode,
+      recuitername: values.recuitername,
+      referral: values.referral,
+      CreateDate: values.CreateDate,
+    });
+
+    // Show a success message
+    toast("You have Submitted");
+
+    // Clear the form
+  } catch (error) {
+    // Show an error message
     toast("Something wrong, Please check your network and try again!!");
     console.error("Error adding/updating document:", error);
   }
