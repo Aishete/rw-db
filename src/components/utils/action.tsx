@@ -44,10 +44,7 @@ export default async function onSubmit(values: FormValues) {
     });
 
     toast("You have Submitted");
-    // Show a success messag
-    // Clear the form
   } catch (error) {
-    // Show an error message
     toast("Something wrong, Please check your network and try again!!");
     console.error("Error adding/updating document:", error);
   }

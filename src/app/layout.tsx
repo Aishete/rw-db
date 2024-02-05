@@ -5,7 +5,7 @@ import { AuthContextProvider } from "../app/context/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 import { Toaster } from "@/components/ui/sonner";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 export const metadata: Metadata = {
   title: "RW Database",
   description: "RW Database",

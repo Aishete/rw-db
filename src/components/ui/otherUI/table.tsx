@@ -100,7 +100,7 @@ const CandidateTable: React.FC = () => {
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div>
-          <div>
+          <div className="mb-4 text-xl md:text-2xl flex h-15 items-end justify-start rounded-md">
             <Table>
               <TableCaption>A list of Candidate.</TableCaption>
               <TableHeader>
@@ -164,7 +164,7 @@ const RecruiterTable: React.FC = () => {
   useEffect(() => {
     fetchRecruiterData(setrecruiter);
   }, []);
-  // Run the effect only once on component mount
+  // Run the effect only once on component mount b
   function DeleteCandidate({ id }: { id: string }) {
     const handleDelete = async ({ id }: { id: string }) => {
       try {
