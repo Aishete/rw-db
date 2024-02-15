@@ -26,9 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${jost.className} antialiased dark:bg-[#ffffff] text-black`}
-      >
+      <body className={`${jost.className} antialiased dark:bg-[#09090B]`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
