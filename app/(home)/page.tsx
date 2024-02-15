@@ -1,9 +1,10 @@
-import React from "react";
+"use client";
 
+import React from "react";
+import { redirect } from "next/navigation";
 export default function Home() {
-	return (
-		<div>
-			<h1>Build Dashboard with role access using Next.js + Supabase </h1>
-		</div>
-	);
+  React.useEffect(() => {
+    redirect("/auth");
+  }, []);
+  return <div></div>;
 }

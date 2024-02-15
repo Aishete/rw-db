@@ -6,14 +6,22 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -23,101 +31,106 @@ import { loginWithEmailAndPassword } from "../actions";
 import { AuthTokenResponse } from "@supabase/supabase-js";
 
 const FormSchema = z.object({
-	email: z.string().email(),
-	password: z.string().min(1, { message: "Password can not be empty" }),
+  email: z.string().email(),
+  password: z.string().min(1, { message: "Password can not be empty" }),
 });
 
 export default function AuthForm() {
-	const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
-		defaultValues: {
-			email: "",
-			password: "",
-		},
-	});
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-	function onSubmit(data: z.infer<typeof FormSchema>) {
-		startTransition(async () => {
-			const { error } = JSON.parse(
-				await loginWithEmailAndPassword(data)
-			) as AuthTokenResponse;
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    startTransition(async () => {
+      const { error } = JSON.parse(
+        await loginWithEmailAndPassword(data)
+      ) as AuthTokenResponse;
 
-			if (error) {
-				toast({
-					title: "Fail to login",
-					description: (
-						<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-							<code className="text-white">{error.message}</code>
-						</pre>
-					),
-				});
-			} else {
-				toast({
-					title: "Successfully login 🎉",
-				});
-			}
-		});
-	}
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Fail to login",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md p-4">
+              <code className="text-white">{error.message}</code>
+            </pre>
+          ),
+        });
+      } else {
+        toast({
+          title: "Successfully login 🎉",
+        });
+      }
+    });
+  }
 
-	return (
-		<div className="w-96">
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="w-full space-y-6"
-				>
-					<FormField
-						control={form.control}
-						name="email"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Email</FormLabel>
-								<FormControl>
-									<Input placeholder="shadcn" {...field} />
-								</FormControl>
+  return (
+    <div className="flex-1 flex flex-col w-96 px-8 sm:max-w-md justify-center gap-2 ">
+      <Card className="bg-white text-black">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-full space-y-6"
+          >
+            <CardHeader>
+              <CardTitle>Account</CardTitle>
+              <CardDescription>
+                Please enter your email and password.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="example@gmail.com" {...field} />
+                    </FormControl>
 
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="password"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Password</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="shadcn"
-										{...field}
-										type="password"
-									/>
-								</FormControl>
-								<FormDescription>
-									{
-										"contact your admin if you forgot your password"
-									}
-								</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<Button
-						type="submit"
-						variant="outline"
-						className="w-full flex items-center gap-2"
-					>
-						Login{" "}
-						<AiOutlineLoading3Quarters
-							className={cn("animate-spin", {
-								hidden: true,
-							})}
-						/>
-					</Button>
-				</form>
-			</Form>
-		</div>
-	);
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} type="password" />
+                    </FormControl>
+                    <FormDescription>
+                      {"contact your admin if you forgot your password"}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-full flex items-center gap-2"
+              >
+                Login{" "}
+                <AiOutlineLoading3Quarters
+                  className={cn("animate-spin", {
+                    hidden: !isPending,
+                  })}
+                />
+              </Button>
+            </CardContent>
+          </form>
+        </Form>
+      </Card>
+    </div>
+  );
 }
