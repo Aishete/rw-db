@@ -15,7 +15,7 @@ export default function NavLinks() {
       Icon: PersonIcon,
     },
     {
-      href: "/dashboard/todo",
+      href: "/dashboard/candidates",
       text: "Candidates",
       Icon: CrumpledPaperIcon,
     },
