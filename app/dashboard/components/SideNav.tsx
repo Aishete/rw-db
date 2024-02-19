@@ -13,10 +13,14 @@ export default function SideNav() {
 
 export const SideBar = ({ className }: { className?: string }) => {
   const user = useUserStore.getState().user;
+  console.log(user?.user_metadata.role);
+
   const isUserHaveAccess =
-    user?.role === "Admin" || user?.role === "Super-Admin";
+    user?.user_metadata.role === "Admin" ||
+    user?.user_metadata.role === "Super-Admin";
   const isUserHavenotAccess =
-    user?.role !== "Admin" && user?.role !== "Super-Admin";
+    user?.user_metadata.role !== "Admin" &&
+    user?.user_metadata.role !== "Super-Admin";
   return (
     <div className={className}>
       <div

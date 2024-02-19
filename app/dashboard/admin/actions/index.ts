@@ -12,7 +12,11 @@ export async function createAdmin(data: {
   confirm: string;
 }) {
   const { data: userSession } = await readUserSession();
-  if (userSession.session?.user.user_metadata.role !== "Super-Admin") {
+  console.log(userSession.session?.user.user_metadata.role);
+  if (
+    userSession.session?.user.user_metadata.role !== "Super-Admin" ||
+    userSession.session?.user.user_metadata.role !== "Admin"
+  ) {
     throw new Error(
       "You do not have permission to create an admin, contact your super admin."
     );
