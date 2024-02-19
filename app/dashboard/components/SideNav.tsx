@@ -3,7 +3,6 @@ import NavLinks from "./NavLinks";
 
 import { cn } from "@/lib/utils";
 import ModeToggle from "../candidate/components/ToggleDarkMode";
-import { Button } from "@/components/ui/button";
 import SignOut from "./SignOut";
 import { useUserStore } from "@/lib/store/user";
 import NavRecruiterLinks from "./Recuitertable";
@@ -14,7 +13,6 @@ export default function SideNav() {
 export const SideBar = ({ className }: { className?: string }) => {
   const user = useUserStore.getState().user;
   console.log(user?.user_metadata.role);
-
   const isUserHaveAccess =
     user?.user_metadata.role === "Admin" ||
     user?.user_metadata.role === "Super-Admin";

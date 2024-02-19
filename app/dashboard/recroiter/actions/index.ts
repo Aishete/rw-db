@@ -13,7 +13,7 @@ export async function createRecuiterA(data: {
   confirm: string;
 }) {
   const { data: userSession } = await readUserSession();
-  console.log(userSession.session?.user.user_metadata.role);
+
   if (
     userSession.session?.user.user_metadata.role !== "Super-Admin" &&
     userSession.session?.user.user_metadata.role !== "Admin"
