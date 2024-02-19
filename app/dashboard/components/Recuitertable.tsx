@@ -4,22 +4,12 @@ import { PersonIcon, CrumpledPaperIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-export default function NavLinks() {
+export default function NavRecruiterLinks() {
   const pathname = usePathname();
   const links = [
     {
-      href: "/dashboard/admin",
-      text: "Admin",
-      Icon: PersonIcon,
-    },
-    {
-      href: "/dashboard/candidate",
+      href: "/dashboard/recruiterTable",
       text: "Candidates",
-      Icon: CrumpledPaperIcon,
-    },
-    {
-      href: "/dashboard/recroiter",
-      text: "Recroiter",
       Icon: CrumpledPaperIcon,
     },
   ];

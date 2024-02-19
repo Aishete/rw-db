@@ -5,12 +5,18 @@ import { cn } from "@/lib/utils";
 import ModeToggle from "../candidate/components/ToggleDarkMode";
 import { Button } from "@/components/ui/button";
 import SignOut from "./SignOut";
-
+import { useUserStore } from "@/lib/store/user";
+import NavRecruiterLinks from "./Recuitertable";
 export default function SideNav() {
   return <SideBar className=" hidden lg:block dark:bg-graident-dark flex-1" />;
 }
 
 export const SideBar = ({ className }: { className?: string }) => {
+  const user = useUserStore.getState().user;
+  const isUserHaveAccess =
+    user?.role === "Admin" || user?.role === "Super-Admin";
+  const isUserHavenotAccess =
+    user?.role !== "Admin" && user?.role !== "Super-Admin";
   return (
     <div className={className}>
       <div
@@ -24,7 +30,8 @@ export const SideBar = ({ className }: { className?: string }) => {
 
             <ModeToggle />
           </div>
-          <NavLinks />
+          {isUserHaveAccess && <NavLinks />}
+          {isUserHavenotAccess && <NavRecruiterLinks />}
         </div>
         <div className="">
           <SignOut />
