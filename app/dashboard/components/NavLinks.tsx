@@ -10,8 +10,8 @@ export default function NavLinks() {
 
   const links = [
     {
-      href: "/dashboard/members",
-      text: "Members",
+      href: "/dashboard/admin",
+      text: "Admin",
       Icon: PersonIcon,
     },
     {

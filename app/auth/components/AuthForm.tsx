@@ -56,11 +56,7 @@ export default function AuthForm() {
         toast({
           variant: "destructive",
           title: "Fail to login",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md p-4">
-              <code className="text-white">{error.message}</code>
-            </pre>
-          ),
+          description: <code className="text-white">{error.message}</code>,
         });
       } else {
         toast({
