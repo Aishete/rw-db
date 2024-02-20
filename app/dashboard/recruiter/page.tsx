@@ -1,5 +1,4 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import MemberTable from "./components/MemberTable";
 import SearchMembers from "./components/SearchMembers";
 import { CreateA } from "./components/create/CreateRecuiter";

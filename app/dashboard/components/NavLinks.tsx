@@ -18,7 +18,7 @@ export default function NavLinks() {
       Icon: CrumpledPaperIcon,
     },
     {
-      href: "/dashboard/recroiter",
+      href: "/dashboard/recruiter",
       text: "Recroiter",
       Icon: CrumpledPaperIcon,
     },

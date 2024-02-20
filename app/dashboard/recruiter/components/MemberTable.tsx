@@ -5,11 +5,11 @@ import ListOfMembers from "./ListOfMembers";
 import Table from "@/components/ui/Table";
 
 export default function MemberTable() {
-	const tableHeader = ["Name", "Role", "Joined", "Status"];
+  const tableHeader = ["Name", "Code", "Role", "Joined", "Status", "Action"];
 
-	return (
-		<Table headers={tableHeader}>
-			<ListOfMembers />
-		</Table>
-	);
+  return (
+    <Table headers={tableHeader}>
+      <ListOfMembers />
+    </Table>
+  );
 }

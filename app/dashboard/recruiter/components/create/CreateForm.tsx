@@ -24,10 +24,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createRecuiterA, updateRecuiterById } from "../../actions";
+import { createRecuiterA, updateRecruiterById } from "../../actions";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "@/lib/utils";
-import { use, useState, useTransition } from "react";
+import { useTransition } from "react";
 
 const FormSchema = z
   .object({

@@ -1,7 +1,8 @@
 "use server";
 
 import { readUserSession } from "@/lib/actions";
-import { createSupbaseAdmin } from "@/lib/supabase";
+import { createSupbaseAdmin, createSupbaseServerClient } from "@/lib/supabase";
+import { revalidatePath, unstable_noStore } from "next/cache";
 
 export async function createRecuiterA(data: {
   name: string;
@@ -64,11 +65,41 @@ export async function createRecuiterA(data: {
   if (insertPermissionError) {
     throw insertPermissionError;
   }
+  revalidatePath("/dashboard/admin"); // revalidate the admin page
+
   return { user };
 }
 
-export async function updateRecuiterById(id: string) {
+export async function updateRecruiterById(id: string) {
   console.log("update member");
 }
-export async function deleteRecuiterById(id: string) {}
-export async function readMembers() {}
+export async function deleteRecruiterById(
+  user_id: string
+): Promise<{ error?: string; message?: string }> {
+  try {
+    const supabaseAdmin = await createSupbaseAdmin();
+    const deleteUser = await supabaseAdmin.auth.admin.deleteUser(user_id);
+    if (deleteUser.error) {
+      return { error: deleteUser.error.message };
+    } else {
+      const supabase = await createSupbaseServerClient();
+      const result = await supabase
+        .from("recruiter")
+        .delete()
+        .eq("id", user_id);
+      if (result.error) {
+        return { error: result.error.message };
+      }
+    }
+    revalidatePath("/dashboard/recruiter"); // revalidate the admin page
+    return { message: "User deleted successfully" };
+  } catch (error) {
+    console.log(error);
+    return { error: "Failed to delete user: " + (error as any).message };
+  }
+}
+export async function readRecruiter() {
+  unstable_noStore();
+  const supabase = await createSupbaseServerClient();
+  return await supabase.from("Recruiter_permission").select("*,recruiter(*)");
+}
