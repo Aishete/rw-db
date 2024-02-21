@@ -6,7 +6,7 @@ import ModeToggle from "../candidate/components/ToggleDarkMode";
 import SignOut from "./SignOut";
 import { useUserStore } from "@/lib/store/user";
 import NavRecruiterLinks from "./Recuitertable";
-export default function SideNav() {
+export default async function SideNav() {
   return <SideBar className=" hidden lg:block dark:bg-graident-dark flex-1" />;
 }
 
