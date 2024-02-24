@@ -17,13 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-export default function DeleteForm({
-  user_id,
-  fetchData,
-}: {
-  user_id: string;
-  fetchData: () => void;
-}) {
+export default function DeleteForm({ user_id }: { user_id: string }) {
   const [ispedding, startTransition] = useTransition();
   const onSubmit = () => {
     startTransition(async () => {
@@ -40,7 +34,6 @@ export default function DeleteForm({
           variant: "success",
           description: "Admin has been deleted",
         });
-        fetchData();
       }
     });
   };

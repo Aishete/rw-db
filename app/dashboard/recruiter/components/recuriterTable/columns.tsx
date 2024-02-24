@@ -31,13 +31,7 @@ export type RecruiterPer = {
     recruiter_name: string;
   };
 };
-const ActionCell = ({
-  row,
-  fetchData,
-}: {
-  row: any;
-  fetchData: () => void;
-}) => {
+const ActionCell = ({ row }: { row: any }) => {
   const RecruiterPer = row.original;
   return (
     <DropdownMenu>
@@ -50,7 +44,7 @@ const ActionCell = ({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <EditRecruiter admins={[RecruiterPer]} />
-        <DeleteForm user_id={RecruiterPer.recruiter_id} fetchData={fetchData} />
+        <DeleteForm user_id={RecruiterPer.recruiter_id} />
         <DropdownMenuSeparator />
         <DropdownMenuItem>View Recruiter details</DropdownMenuItem>
       </DropdownMenuContent>
@@ -95,6 +89,6 @@ export const columns = (fetchData: () => void): ColumnDef<RecruiterPer>[] => [
   },
   {
     id: "actions",
-    cell: ({ row }) => <ActionCell row={row} fetchData={fetchData} />,
+    cell: ({ row }) => <ActionCell row={row} />,
   },
 ];
