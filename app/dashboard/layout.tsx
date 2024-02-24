@@ -12,6 +12,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
     return redirect("/auth");
   }
   useUserStore.setState({ user: userSession.session.user });
+
   return (
     <div className="w-full flex ">
       <div className="h-screen flex flex-col">

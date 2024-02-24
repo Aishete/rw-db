@@ -3,8 +3,15 @@ import BasicForm from "./BasicForm";
 import AccountForm from "./AccountForm";
 import AdvanceForm from "./AdvanceForm";
 import { cn } from "@/lib/utils";
+import { AdminPer } from "@/lib/type";
 
-export default function EditForm({ isAdmin }: { isAdmin?: boolean }) {
+export default function EditForm({
+  isAdmin,
+  admins,
+}: {
+  isAdmin?: boolean;
+  admins: AdminPer;
+}) {
   return (
     <Tabs defaultValue="basic" className="w-full space-y-5">
       <TabsList
@@ -19,15 +26,15 @@ export default function EditForm({ isAdmin }: { isAdmin?: boolean }) {
         )}
       </TabsList>
       <TabsContent value="basic">
-        <BasicForm />
+        <BasicForm admins={admins} />
       </TabsContent>
       {isAdmin && (
         <>
           <TabsContent value="account">
-            <AccountForm />
+            <AccountForm admins={admins} />
           </TabsContent>
           <TabsContent value="advance">
-            <AdvanceForm />
+            <AdvanceForm admins={admins} />
           </TabsContent>
         </>
       )}

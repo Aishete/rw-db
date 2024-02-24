@@ -1,7 +1,7 @@
 import React from "react";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import EditMember from "./edit/EditMember";
+import EditMember from "./edit/EditAdmin";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/lib/store/user";
@@ -12,7 +12,6 @@ import DeleteForm from "./deleteform";
 
 export default async function ListOfMembers() {
   const user = useUserStore.getState().user;
-  console.log(user?.user_metadata.role);
   const isUserHaveAccess = user?.user_metadata.role === "Super-Admin";
   const { data: admins } = await readAdmin();
   return (
@@ -58,7 +57,7 @@ export default async function ListOfMembers() {
             </div>
             <div className="flex gap-2 items-center">
               {isUserHaveAccess && <DeleteForm user_id={admins.admin.id} />}{" "}
-              <EditMember isAdmin={isUserHaveAccess} />
+              <EditMember isAdmin={isUserHaveAccess} admins={[admins]} />
             </div>
           </div>
         );

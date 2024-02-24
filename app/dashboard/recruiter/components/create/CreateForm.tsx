@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createRecuiterA, updateRecruiterById } from "../../actions";
+import { createRecuiterA } from "../../actions";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "@/lib/utils";
 import { useTransition } from "react";
@@ -65,7 +65,7 @@ export default function AdminForm({ onSuccess }: AdminFormProps) {
       email: "",
     },
   });
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
     startTransition(async () => {
       try {
         const result = await createRecuiterA(data);
@@ -82,9 +82,11 @@ export default function AdminForm({ onSuccess }: AdminFormProps) {
             variant: "success",
             title: "Successfully created user!",
           });
+
           if (onSuccess) {
             onSuccess();
           }
+          // fetchdata();
         }
       } catch (e) {
         toast({
@@ -92,9 +94,10 @@ export default function AdminForm({ onSuccess }: AdminFormProps) {
           title: "An error occurred",
           description: (e as Error).message,
         });
+        // fetchdata();
       }
     });
-  }
+  };
 
   return (
     <Form {...form}>

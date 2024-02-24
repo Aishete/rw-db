@@ -28,7 +28,6 @@ export default function Todo() {
         <SearchTodo />
         <CreateC />
       </div>
-      <MemberTable />
     </div>
   );
 }

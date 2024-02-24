@@ -1,18 +1,18 @@
 import React from "react";
 import NavLinks from "./NavLinks";
-
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import ModeToggle from "../candidate/components/ToggleDarkMode";
-import SignOut from "./SignOut";
+import { SignOut } from "./alertbox";
 import { useUserStore } from "@/lib/store/user";
 import NavRecruiterLinks from "./Recuitertable";
-export default async function SideNav() {
+import { SignOutform } from "./SignOut";
+export default function SideNav() {
   return <SideBar className=" hidden lg:block dark:bg-graident-dark flex-1" />;
 }
 
 export const SideBar = ({ className }: { className?: string }) => {
   const user = useUserStore.getState().user;
-  console.log(user?.user_metadata.role);
   const isUserHaveAccess =
     user?.user_metadata.role === "Admin" ||
     user?.user_metadata.role === "Super-Admin";
@@ -35,9 +35,27 @@ export const SideBar = ({ className }: { className?: string }) => {
           {isUserHaveAccess && <NavLinks />}
           {isUserHavenotAccess && <NavRecruiterLinks />}
         </div>
-        <div className="">
-          <SignOut />
+        <div className=" mt-11">
+          <div className="">
+            <div className="mb-4">
+              <div className="space-y-1">
+                {user && user.user_metadata && (
+                  <>
+                    <h4 className="text-sm font-medium leading-none">
+                      {user.user_metadata.name}
+                      {"   "}({user.user_metadata.role})
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      {user.user_metadata.email}
+                      {"   "}
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
+        <SignOut />
       </div>
     </div>
   );

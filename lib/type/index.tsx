@@ -6,6 +6,7 @@ export type AdminPer = {
   Status: "active" | "resigned";
   admin: {
     id: string;
+    email: string;
     name: string;
     updated_at: string;
   };
@@ -19,6 +20,7 @@ export type RecruiterPer = {
   recruiter_id: string;
   recruiter: {
     id: string;
+    email: string;
     created_at: string;
     recruiter_code: string;
     recruiter_name: string;

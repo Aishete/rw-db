@@ -37,6 +37,8 @@ export async function createRecuiterA(data: {
       email_confirm: true,
       user_metadata: {
         role: data.role,
+        name: data.name,
+        email: data.email,
       },
     });
 
@@ -48,6 +50,7 @@ export async function createRecuiterA(data: {
     recruiter_name: data.name,
     recruiter_code: data.recruiter_Code,
     id: user?.user.id,
+    email: data.email,
   });
 
   if (insertAdminError) {
@@ -65,14 +68,108 @@ export async function createRecuiterA(data: {
   if (insertPermissionError) {
     throw insertPermissionError;
   }
-  revalidatePath("/dashboard/admin"); // revalidate the admin page
+  revalidatePath("/dashboard/recruiter"); // revalidate the admin page
 
   return { user };
 }
 
-export async function updateRecruiterById(id: string) {
-  console.log("update member");
+export async function updateRecruiterBasicById(
+  id: string,
+  data: {
+    recruiter_name: string;
+    recruiter_code: string;
+  }
+) {
+  const supabaseAdmin = await createSupbaseAdmin();
+  const result = await supabaseAdmin.auth.admin.updateUserById(id, {
+    user_metadata: { name: data.recruiter_name },
+  });
+  if (result.error) {
+    throw result.error;
+  } else {
+    const supabase = await createSupbaseServerClient();
+    const { error } = await supabase
+      .from("recruiter")
+      .update({
+        recruiter_name: data.recruiter_name,
+        recruiter_code: data.recruiter_code,
+      })
+      .eq("id", id);
+    if (error) {
+      throw error;
+    } else {
+    }
+    return { result }; // Return the updated data
+  }
 }
+export async function updateRecruiterAdvanceById(
+  recuiter_id: string,
+  user_id: string,
+  data: { role: "Recruiter"; Status: "active" | "resigned" }
+) {
+  const supabaseAdmin = await createSupbaseAdmin();
+  const result = await supabaseAdmin.auth.admin.updateUserById(user_id, {
+    user_metadata: { role: data.role },
+  });
+  if (result.error) {
+    throw result.error;
+  } else {
+    const supabase = await createSupbaseServerClient();
+    const { data: updatedData, error } = await supabase
+      .from("Recruiter_permission")
+      .update(data)
+      .eq("id", recuiter_id);
+    if (error) {
+      throw error;
+    } else {
+      return { updatedData }; // Return the updated data
+    }
+  }
+}
+
+export async function updateRecruiterAccountById(
+  user_id: string,
+  data: {
+    email: string;
+    password?: string | undefined;
+  }
+) {
+  let dataObj: {
+    email: string;
+    password?: string | undefined;
+  } = { email: data.email };
+  if (data.password) {
+    dataObj.password = data.password;
+  }
+  const supabaseAdmin = await createSupbaseAdmin();
+  const result = await supabaseAdmin.auth.admin.updateUserById(
+    user_id,
+    dataObj
+  );
+  if (result.error) {
+    throw result.error;
+  } else {
+    const supabaseAdmin = await createSupbaseAdmin();
+    const result = await supabaseAdmin.auth.admin.updateUserById(user_id, {
+      user_metadata: { email: data.email },
+    });
+    if (result.error) {
+      throw result.error;
+    } else {
+      const supabase = await createSupbaseServerClient();
+      const { data: updatedData, error } = await supabase
+        .from("recuiter")
+        .update({ email: data.email })
+        .eq("id", user_id);
+      if (error) {
+        throw error;
+      } else {
+        return { updatedData }; // Return the updated data
+      }
+    }
+  }
+}
+
 export async function deleteRecruiterById(
   user_id: string
 ): Promise<{ error?: string; message?: string }> {

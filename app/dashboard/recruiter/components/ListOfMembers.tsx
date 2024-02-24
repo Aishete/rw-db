@@ -1,7 +1,7 @@
 import React from "react";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import EditMember from "./edit/EditMember";
+import EditMember from "./edit/EditRecruiter";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { readRecruiter } from "../actions";
@@ -54,7 +54,8 @@ export default async function ListOfMembers() {
             </div>
 
             <div className="flex gap-2 items-center">
-              <DeleteForm user_id={recruiters.recruiter.id} /> <EditMember />
+              <DeleteForm user_id={recruiters.recruiter.id} />{" "}
+              <EditMember admins={[recruiters]} />
             </div>
           </div>
         );

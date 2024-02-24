@@ -1,9 +1,19 @@
 "use server";
 
 import { readUserSession } from "@/lib/actions";
+import { useUserStore } from "@/lib/store/user";
 import { createSupbaseAdmin, createSupbaseServerClient } from "@/lib/supabase";
 import { revalidatePath, unstable_noStore } from "next/cache";
-
+export async function role() {
+  const { data: userSession } = await readUserSession();
+  if (userSession.session?.user.user_metadata.role !== "Super-Admin") {
+    const useUserAccess = false;
+    return useUserAccess;
+  } else {
+    const useUserAccess = true;
+    return useUserAccess;
+  }
+}
 export async function createAdmin(data: {
   name: string;
   role: "Admin" | "Super-Admin";
@@ -13,7 +23,6 @@ export async function createAdmin(data: {
   confirm: string;
 }) {
   const { data: userSession } = await readUserSession();
-  console.log(userSession.session?.user.user_metadata.role);
   if (userSession.session?.user.user_metadata.role !== "Super-Admin") {
     throw new Error(
       "You do not have permission to create an admin, contact your super admin."
@@ -32,6 +41,8 @@ export async function createAdmin(data: {
       email_confirm: true,
       user_metadata: {
         role: data.role,
+        name: data.name,
+        email: data.email,
       },
     });
 
@@ -41,7 +52,7 @@ export async function createAdmin(data: {
 
   const { error: insertAdminError } = await supabase
     .from("admin")
-    .insert({ name: data.name, id: user?.user.id });
+    .insert({ name: data.name, id: user?.user.id, email: data.email });
 
   if (insertAdminError) {
     throw insertAdminError;
@@ -62,14 +73,110 @@ export async function createAdmin(data: {
   return { user };
 }
 
-export async function updateAdminById(id: string) {
-  console.log("update member");
+export async function updateAdminBasicById(
+  id: string,
+  data: {
+    name: string;
+  }
+) {
+  const supabaseAdmin = await createSupbaseAdmin();
+  const result = await supabaseAdmin.auth.admin.updateUserById(id, {
+    user_metadata: { name: data.name },
+  });
+  if (result.error) {
+    throw result.error;
+  } else {
+    const supabase = await createSupbaseServerClient();
+    const { error } = await supabase
+      .from("admin")
+      .update({ name: data.name })
+      .eq("id", id);
+    if (error) {
+      throw error;
+    } else {
+      revalidatePath("/dashboard/admin");
+    }
+  }
+  revalidatePath("/dashboard/admin");
+  return { name: data.name }; // Return the updated data
+}
+
+export async function updateAdminAdvanceById(
+  admin_id: string,
+  user_id: string,
+  data: {
+    role: "Super-Admin" | "Admin";
+    Status: "active" | "resigned";
+  }
+) {
+  const supabaseAdmin = await createSupbaseAdmin();
+  const result = await supabaseAdmin.auth.admin.updateUserById(user_id, {
+    user_metadata: { role: data.role },
+  });
+  if (result.error) {
+    throw result.error;
+  } else {
+    const supabase = await createSupbaseServerClient();
+    const { data: updatedData, error } = await supabase
+      .from("Admin_permission")
+      .update(data)
+      .eq("id", admin_id);
+    if (error) {
+      throw error;
+    } else {
+      revalidatePath("/dashboard/admin");
+      return { updatedData }; // Return the updated data
+    }
+  }
+}
+
+export async function updateAdminAccountById(
+  user_id: string,
+  data: {
+    email: string;
+    password?: string | undefined;
+  }
+) {
+  let dataObj: {
+    email: string;
+    password?: string | undefined;
+  } = { email: data.email };
+  if (data.password) {
+    dataObj.password = data.password;
+  }
+  const supabaseAdmin = await createSupbaseAdmin();
+  const result = await supabaseAdmin.auth.admin.updateUserById(
+    user_id,
+    dataObj
+  );
+  if (result.error) {
+    throw result.error;
+  } else {
+    const supabaseAdmin = await createSupbaseAdmin();
+    const result = await supabaseAdmin.auth.admin.updateUserById(user_id, {
+      user_metadata: { email: data.email },
+    });
+    if (result.error) {
+      throw result.error;
+    } else {
+      const supabase = await createSupbaseServerClient();
+      const { data: updatedData, error } = await supabase
+        .from("admin")
+        .update({ email: data.email })
+        .eq("id", user_id);
+      if (error) {
+        throw error;
+      } else {
+        revalidatePath("/dashboard/admin");
+        return { updatedData }; // Return the updated data
+      }
+    }
+  }
 }
 export async function deleteAdminById(
   user_id: string
 ): Promise<{ error?: string; message?: string }> {
   const { data: userSession } = await readUserSession();
-  console.log(userSession.session?.user.user_metadata.role);
   if (userSession.session?.user.user_metadata.role !== "Super-Admin") {
     return {
       error:
