@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { DataTable } from "./components/data-table";
-import SearchMembers from "./components/SearchMembers";
 import { CreateA } from "./components/create/CreateAdmin";
 import { useUserStore } from "@/lib/store/user";
 import { readAdmin } from "./actions";
