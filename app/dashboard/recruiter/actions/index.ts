@@ -99,6 +99,8 @@ export async function updateRecruiterBasicById(
       throw error;
     } else {
     }
+    console.log(result);
+
     return { result }; // Return the updated data
   }
 }
@@ -146,6 +148,7 @@ export async function updateRecruiterAccountById(
     user_id,
     dataObj
   );
+
   if (result.error) {
     throw result.error;
   } else {
@@ -153,18 +156,22 @@ export async function updateRecruiterAccountById(
     const result = await supabaseAdmin.auth.admin.updateUserById(user_id, {
       user_metadata: { email: data.email },
     });
+
     if (result.error) {
       throw result.error;
     } else {
       const supabase = await createSupbaseServerClient();
-      const { data: updatedData, error } = await supabase
-        .from("recuiter")
+      const result = await supabase
+        .from("recruiter") //ensure the table name is correct
         .update({ email: data.email })
         .eq("id", user_id);
-      if (error) {
-        throw error;
+
+      if (result.error) {
+        return { error: result.error.message };
       } else {
-        return { updatedData }; // Return the updated data
+        // Return the updated data
+
+        return { result };
       }
     }
   }

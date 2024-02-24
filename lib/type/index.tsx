@@ -25,4 +25,4 @@ export type RecruiterPer = {
     recruiter_code: string;
     recruiter_name: string;
   };
-}[];
+};

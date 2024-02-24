@@ -164,6 +164,7 @@ export async function updateAdminAccountById(
         .from("admin")
         .update({ email: data.email })
         .eq("id", user_id);
+      console.log(updatedData);
       if (error) {
         throw error;
       } else {

@@ -38,7 +38,7 @@ export default function Recuiter() {
   return (
     <div className="space-y-5 w-full overflow-y-auto px-3">
       <h1 className="text-3xl font-bold">Recruiter</h1>
-      <DataTable columns={columnsArray} data={data} />
+      <DataTable columns={columnsArray} data={data} fetchData={fetchData} />
     </div>
   );
 }

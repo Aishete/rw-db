@@ -40,10 +40,12 @@ import { Button } from "@/components/ui/button";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  fatchData: () => void;
 }
 export function DataTable<TData, TValue>({
   columns,
   data,
+  fatchData,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -110,7 +112,7 @@ export function DataTable<TData, TValue>({
 
         <div className="bg-white rounded-md border ml-2">
           {" "}
-          <CreateA />
+          <CreateA fatchData={fatchData} />
         </div>
       </div>
       <div className="bg-white rounded-md border">

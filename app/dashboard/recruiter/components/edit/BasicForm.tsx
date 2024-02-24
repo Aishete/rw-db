@@ -30,20 +30,26 @@ const FormSchema = z.object({
   }),
 });
 
-export default function BasicForm({ admins }: { admins: RecruiterPer }) {
+export default function BasicForm({
+  admins,
+  fatchData,
+}: {
+  admins: RecruiterPer;
+  fatchData: () => void;
+}) {
   const [ispedding, startTransition] = useTransition();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      recruiter_name: admins[0]?.recruiter?.recruiter_name || "",
-      recruiter_code: admins[0]?.recruiter?.recruiter_code || "",
+      recruiter_name: admins?.recruiter?.recruiter_name || "",
+      recruiter_code: admins?.recruiter?.recruiter_code || "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     startTransition(async () => {
       try {
-        const result = await updateRecruiterBasicById(admins[0]?.recruiter_id, {
+        const result = await updateRecruiterBasicById(admins?.recruiter_id, {
           recruiter_name: data.recruiter_name,
           recruiter_code: data.recruiter_code,
         });
@@ -61,6 +67,7 @@ export default function BasicForm({ admins }: { admins: RecruiterPer }) {
               variant: "success",
               title: "Successfully Update Name!",
             });
+            fatchData();
           }
           // Call fetchData regardless of whether an error occurred
         } else {
@@ -79,6 +86,7 @@ export default function BasicForm({ admins }: { admins: RecruiterPer }) {
           description: (e as Error).message,
         });
       }
+      fatchData();
     });
   };
 

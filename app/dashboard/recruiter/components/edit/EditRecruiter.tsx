@@ -5,7 +5,13 @@ import { Pencil1Icon } from "@radix-ui/react-icons";
 import EditForm from "./EditorForm";
 import { RecruiterPer } from "@/lib/type";
 
-export default function EditRecruiter({ admins }: { admins: RecruiterPer }) {
+export default function EditRecruiter({
+  admins,
+  fatchData,
+}: {
+  admins: RecruiterPer;
+  fatchData: () => void;
+}) {
   return (
     <DailogForm
       id="update-trigger"
@@ -20,7 +26,7 @@ export default function EditRecruiter({ admins }: { admins: RecruiterPer }) {
           Edit{"        "}
         </Button>
       }
-      form={<EditForm admins={admins} />}
+      form={<EditForm admins={admins} fatchData={fatchData} />}
     />
   );
 }

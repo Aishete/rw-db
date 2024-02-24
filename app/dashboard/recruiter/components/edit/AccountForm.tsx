@@ -17,10 +17,9 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { cn } from "@/lib/utils";
-import { updateRecruiterAccountById } from "../../actions";
 import { useTransition } from "react";
-import { RecruiterPer } from "@/lib/type";
-
+import { updateRecruiterAccountById } from "../../actions";
+import { RecruiterPer } from "../recuriterTable/columns";
 const FormSchema = z
   .object({
     email: z.string().email(),
@@ -32,12 +31,18 @@ const FormSchema = z
     path: ["confirm"],
   });
 
-export default function AccountForm({ admins }: { admins: RecruiterPer }) {
+export default function AccountForm({
+  admins,
+  fatchData,
+}: {
+  admins: RecruiterPer;
+  fatchData: () => void;
+}) {
   const [ispedding, startTransition] = useTransition();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: admins[0]?.recruiter?.email || "",
+      email: admins?.recruiter.email || "",
       password: "",
       confirm: "",
     },
@@ -47,7 +52,7 @@ export default function AccountForm({ admins }: { admins: RecruiterPer }) {
     try {
       startTransition(async () => {
         const result = await updateRecruiterAccountById(
-          admins[0].recruiter_id,
+          admins.recruiter.id,
           data
         );
 
@@ -65,6 +70,7 @@ export default function AccountForm({ admins }: { admins: RecruiterPer }) {
               variant: "success",
               title: "Successfully Update Account!",
             });
+            fatchData();
           }
         } else {
           // Handle the case where result is null or undefined
@@ -80,11 +86,11 @@ export default function AccountForm({ admins }: { admins: RecruiterPer }) {
       toast({
         variant: "destructive",
         title: "Error!",
-        description: JSON.stringify((e as Error).message),
+        description: (e as Error).message,
       });
     }
+    fatchData();
   }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">

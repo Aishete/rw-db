@@ -33,7 +33,13 @@ const FormSchema = z.object({
   Status: z.enum(["active", "resigned"]),
 });
 
-export default function AdvanceForm({ admins }: { admins: RecruiterPer }) {
+export default function AdvanceForm({
+  admins,
+  fatchData,
+}: {
+  admins: RecruiterPer;
+  fatchData: () => void;
+}) {
   const [ispedding, startTransition] = useTransition();
   const roles = ["Recruiter"];
   const status = ["active", "resigned"];
@@ -41,17 +47,17 @@ export default function AdvanceForm({ admins }: { admins: RecruiterPer }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      role: admins[0]?.role,
-      Status: admins[0]?.Status,
+      role: admins?.role,
+      Status: admins?.Status,
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
     try {
       startTransition(async () => {
         const result = await updateRecruiterAdvanceById(
-          admins[0]?.id,
-          admins[0]?.recruiter?.id,
+          admins?.id,
+          admins?.recruiter?.id,
           data
         );
 
@@ -69,6 +75,7 @@ export default function AdvanceForm({ admins }: { admins: RecruiterPer }) {
               variant: "success",
               title: "Successfully Update Advance!",
             });
+            fatchData();
           }
         } else {
           // Handle the case where result is null or undefined
@@ -87,7 +94,8 @@ export default function AdvanceForm({ admins }: { admins: RecruiterPer }) {
         description: (e as Error).message,
       });
     }
-  }
+    fatchData();
+  };
 
   return (
     <Form {...form}>

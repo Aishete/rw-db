@@ -5,7 +5,7 @@ import AdvanceForm from "./AdvanceForm";
 import { cn } from "@/lib/utils";
 import { RecruiterPer } from "@/lib/type";
 
-export default function EditForm({ admins }: { admins: RecruiterPer }) {
+export default function EditForm({ admins, fatchData }: { admins: RecruiterPer ; fatchData: () => void}) {
   return (
     <Tabs defaultValue="basic" className="w-full space-y-5">
       <TabsList className={cn("grid w-full ", "grid-cols-3")}>
@@ -14,13 +14,13 @@ export default function EditForm({ admins }: { admins: RecruiterPer }) {
         <TabsTrigger value="advance">Advance</TabsTrigger>
       </TabsList>
       <TabsContent value="basic">
-        <BasicForm admins={admins} />
+        <BasicForm admins={admins} fatchData={fatchData}/>
       </TabsContent>
       <TabsContent value="account">
-        <AccountForm admins={admins} />
+        <AccountForm admins={admins} fatchData={fatchData}/>
       </TabsContent>
       <TabsContent value="advance">
-        <AdvanceForm admins={admins} />
+        <AdvanceForm admins={admins} fatchData={fatchData}/>
       </TabsContent>
     </Tabs>
   );

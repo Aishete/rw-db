@@ -31,7 +31,13 @@ export type RecruiterPer = {
     recruiter_name: string;
   };
 };
-const ActionCell = ({ row }: { row: any }) => {
+const ActionCell = ({
+  row,
+  fatchData,
+}: {
+  row: any;
+  fatchData: () => void;
+}) => {
   const RecruiterPer = row.original;
   return (
     <DropdownMenu>
@@ -43,15 +49,15 @@ const ActionCell = ({ row }: { row: any }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <EditRecruiter admins={[RecruiterPer]} />
-        <DeleteForm user_id={RecruiterPer.recruiter_id} />
+        <EditRecruiter admins={RecruiterPer} fatchData={fatchData} />
+        <DeleteForm user_id={RecruiterPer.recruiter_id} fatchData={fatchData} />
         <DropdownMenuSeparator />
         <DropdownMenuItem>View Recruiter details</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
-export const columns = (fetchData: () => void): ColumnDef<RecruiterPer>[] => [
+export const columns = (fatchData: () => void): ColumnDef<RecruiterPer>[] => [
   {
     id: "Name",
     accessorKey: "recruiter.recruiter_name",
@@ -89,6 +95,6 @@ export const columns = (fetchData: () => void): ColumnDef<RecruiterPer>[] => [
   },
   {
     id: "actions",
-    cell: ({ row }) => <ActionCell row={row} />,
+    cell: ({ row }) => <ActionCell row={row} fatchData={fatchData} />,
   },
 ];
