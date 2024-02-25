@@ -18,7 +18,11 @@ import { cn } from "@/lib/utils";
 import { CreateA } from "./create/CreateAdmin";
 import { role } from "../actions";
 
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import {
+  CaretSortIcon,
+  ChevronDownIcon,
+  DotsHorizontalIcon,
+} from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -54,6 +58,7 @@ export function DataTable<TData, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
     data,
     columns,
@@ -63,6 +68,7 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
@@ -86,7 +92,7 @@ export function DataTable<TData, TValue>({
     Promise.resolve(fetchData())
       .then(() => setIsLoading(false))
       .catch(() => setIsLoading(false));
-  }, [fetchData]);
+  }, []);
   return (
     <div>
       <div className=" flex items-center py-4">

@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
     Promise.resolve(fetchData())
       .then(() => setIsLoading(false))
       .catch(() => setIsLoading(false));
-  }, [fetchData]);
+  }, []);
 
   return (
     <div>
