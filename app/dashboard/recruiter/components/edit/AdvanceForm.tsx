@@ -35,10 +35,10 @@ const FormSchema = z.object({
 
 export default function AdvanceForm({
   admins,
-  fatchData,
+  fetchData,
 }: {
   admins: RecruiterPer;
-  fatchData: () => void;
+  fetchData: () => void;
 }) {
   const [ispedding, startTransition] = useTransition();
   const roles = ["Recruiter"];
@@ -75,7 +75,7 @@ export default function AdvanceForm({
               variant: "success",
               title: "Successfully Update Advance!",
             });
-            fatchData();
+            fetchData();
           }
         } else {
           // Handle the case where result is null or undefined
@@ -94,7 +94,7 @@ export default function AdvanceForm({
         description: (e as Error).message,
       });
     }
-    fatchData();
+    fetchData();
   };
 
   return (

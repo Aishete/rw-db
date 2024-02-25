@@ -19,10 +19,10 @@ import {
 } from "@/components/ui/alert-dialog";
 export default function DeleteForm({
   user_id,
-  fatchData,
+  fetchData,
 }: {
   user_id: string;
-  fatchData: () => void;
+  fetchData: () => void;
 }) {
   const [ispedding, startTransition] = useTransition();
   const onSubmit = () => {
@@ -35,7 +35,7 @@ export default function DeleteForm({
           description: (Error as any).message,
         });
       } else {
-        fatchData();
+        fetchData();
         toast({
           title: "Delete success!!",
           variant: "success",

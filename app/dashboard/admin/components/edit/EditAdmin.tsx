@@ -8,9 +8,11 @@ import { role } from "../../actions";
 import { Console } from "console";
 export default function EditMember({
   admins,
+  fetchData,
 }: {
   isAdmin?: boolean;
   admins: AdminPer;
+  fetchData: () => void;
 }) {
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
 
@@ -37,7 +39,9 @@ export default function EditMember({
           Edit{"        "}
         </Button>
       }
-      form={<EditForm isAdmin={isAdmin} admins={admins} />}
+      form={
+        <EditForm isAdmin={isAdmin} admins={admins} fetchData={fetchData} />
+      }
     />
   );
 }

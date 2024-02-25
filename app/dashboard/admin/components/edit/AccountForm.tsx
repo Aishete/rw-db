@@ -31,7 +31,13 @@ const FormSchema = z
     path: ["confirm"],
   });
 
-export default function AccountForm({ admins }: { admins: AdminPer }) {
+export default function AccountForm({
+  admins,
+  fetchData,
+}: {
+  admins: AdminPer;
+  fetchData: () => void;
+}) {
   const [ispedding, startTransition] = useTransition();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -57,6 +63,7 @@ export default function AccountForm({ admins }: { admins: AdminPer }) {
               description: <code className="text-white">{error.message}</code>,
             });
           } else {
+            fetchData();
             toast({
               variant: "success",
               title: "Successfully Update Account!",
@@ -78,6 +85,7 @@ export default function AccountForm({ admins }: { admins: AdminPer }) {
         title: "Error!",
         description: (e as Error).message,
       });
+      fetchData();
     }
   }
   return (

@@ -17,7 +17,13 @@ import {
 import DeleteForm from "./deleteform";
 import EditAdmin from "./edit/EditAdmin";
 
-const ActionCell = ({ row }: { row: any }) => {
+const ActionCell = ({
+  row,
+  fetchData,
+}: {
+  row: any;
+  fetchData: () => void;
+}) => {
   const AdminPer = row.original;
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
 
@@ -39,8 +45,10 @@ const ActionCell = ({ row }: { row: any }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <EditAdmin admins={[AdminPer]} />
-        {isAdmin && <DeleteForm user_id={AdminPer.admin_id} />}
+        <EditAdmin admins={[AdminPer]} fetchData={fetchData} />
+        {isAdmin && (
+          <DeleteForm user_id={AdminPer.admin_id} fetchData={fetchData} />
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem>View Recruiter details</DropdownMenuItem>
       </DropdownMenuContent>
@@ -61,7 +69,7 @@ export type AdminPer = {
   };
 };
 
-export const columns: ColumnDef<AdminPer>[] = [
+export const columns = (fetchData: () => void): ColumnDef<AdminPer>[] => [
   {
     id: "Name",
     accessorKey: "admin.name",
@@ -84,6 +92,6 @@ export const columns: ColumnDef<AdminPer>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <ActionCell row={row} />,
+    cell: ({ row }) => <ActionCell row={row} fetchData={fetchData} />,
   },
 ];

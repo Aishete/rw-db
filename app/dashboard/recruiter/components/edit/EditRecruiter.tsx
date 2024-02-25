@@ -7,10 +7,10 @@ import { RecruiterPer } from "@/lib/type";
 
 export default function EditRecruiter({
   admins,
-  fatchData,
+  fetchData,
 }: {
   admins: RecruiterPer;
-  fatchData: () => void;
+  fetchData: () => void;
 }) {
   return (
     <DailogForm
@@ -26,7 +26,7 @@ export default function EditRecruiter({
           Edit{"        "}
         </Button>
       }
-      form={<EditForm admins={admins} fatchData={fatchData} />}
+      form={<EditForm admins={admins} fetchData={fetchData} />}
     />
   );
 }

@@ -15,13 +15,13 @@ import CreateForm from "./CreateForm";
 //   DrawerTrigger,
 // } from "@/components/ui/drawer";
 
-export function CreateA({ fatchData }: { fatchData: () => void }) {
+export function CreateA({ fetchData }: { fetchData: () => void }) {
   return (
     <DailogForm
       id="create-trigger"
       title="Create Recruiter"
       Trigger={<Button variant="outline">Create+</Button>}
-      form={<CreateForm fatchData={fatchData} />}
+      form={<CreateForm fetchData={fetchData} />}
     />
   );
 }

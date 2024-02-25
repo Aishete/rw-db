@@ -33,7 +33,13 @@ const FormSchema = z.object({
   Status: z.enum(["active", "resigned"]),
 });
 
-export default function AdvanceForm({ admins }: { admins: AdminPer }) {
+export default function AdvanceForm({
+  admins,
+  fetchData,
+}: {
+  admins: AdminPer;
+  fetchData: () => void;
+}) {
   const [ispedding, startTransition] = useTransition();
   const roles = ["Super-Admin", "Admin"];
   const status = ["active", "resigned"];
@@ -62,6 +68,7 @@ export default function AdvanceForm({ admins }: { admins: AdminPer }) {
               description: <code className="text-white">{error.message}</code>,
             });
           } else {
+            fetchData();
             toast({
               variant: "success",
               title: "Successfully Update Advance!",
@@ -73,6 +80,7 @@ export default function AdvanceForm({ admins }: { admins: AdminPer }) {
             title: "Error!",
             description: "An error occurred while updating the advance.",
           });
+          fetchData();
         }
       });
     } catch (e) {

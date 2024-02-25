@@ -26,21 +26,21 @@ async function fetchRecruiter(): Promise<RecruiterPer[]> {
 export default function Recruiter() {
   const [data, setData] = useState<RecruiterPer[]>([]);
 
-  const fatchData = async () => {
+  const fetchData = async () => {
     const result = await fetchRecruiter();
     setData(result);
   };
 
   useEffect(() => {
-    fatchData();
+    fetchData();
   }, []);
 
-  const columnsArray = columns(fatchData);
+  const columnsArray = columns(fetchData);
 
   return (
     <div className="space-y-5 w-full overflow-y-auto px-3">
       <h1 className="text-3xl font-bold">Recruiter</h1>
-      <DataTable columns={columnsArray} data={data} fatchData={fatchData} />
+      <DataTable columns={columnsArray} data={data} fetchData={fetchData} />
     </div>
   );
 }

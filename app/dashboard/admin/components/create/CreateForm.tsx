@@ -46,8 +46,9 @@ const FormSchema = z
   });
 interface AdminFormProps {
   onSuccess?: () => void;
+  fetchData: () => void;
 }
-export default function AdminForm({ onSuccess }: AdminFormProps) {
+export default function AdminForm({ onSuccess, fetchData }: AdminFormProps) {
   const [ispedding, startTransition] = useTransition();
   const roles = ["Super-Admin", "Admin"];
   const status = ["active", "resigned"];
@@ -81,6 +82,7 @@ export default function AdminForm({ onSuccess }: AdminFormProps) {
           if (onSuccess) {
             onSuccess();
           }
+          fetchData();
         }
       } catch (e) {
         toast({
@@ -88,6 +90,7 @@ export default function AdminForm({ onSuccess }: AdminFormProps) {
           title: "An error occurred",
           description: (e as Error).message,
         });
+        fetchData();
       }
     });
   }

@@ -17,7 +17,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { revalidatePath } from "next/cache";
-export default function DeleteForm({ user_id }: { user_id: string }) {
+export default function DeleteForm({
+  user_id,
+  fetchData,
+}: {
+  user_id: string;
+  fetchData: () => void;
+}) {
   const [ispedding, startTransition] = useTransition();
   const onSubmit = () => {
     startTransition(async () => {
@@ -29,6 +35,7 @@ export default function DeleteForm({ user_id }: { user_id: string }) {
           description: (Error as any).message,
         });
       } else {
+        fetchData();
         toast({
           title: "Delete success!!",
           variant: "success",

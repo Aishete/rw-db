@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { DataTable } from "./components/data-table";
-import { CreateA } from "./components/create/CreateAdmin";
-import { useUserStore } from "@/lib/store/user";
 import { readAdmin } from "./actions";
 import { columns, AdminPer } from "./components/columns";
-async function fetchRecruiter(): Promise<AdminPer[]> {
+async function fetchAdmin(): Promise<AdminPer[]> {
   const { data: admins } = await readAdmin();
   return (admins as AdminPer[]).map((admin) => ({
     id: admin.id,
@@ -25,21 +23,20 @@ async function fetchRecruiter(): Promise<AdminPer[]> {
 export default function Admin() {
   const [data, setData] = useState<AdminPer[]>([]);
 
+  const fetchData = async () => {
+    const result = await fetchAdmin();
+    setData(result);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchRecruiter();
-      setData(result);
-    };
-
     fetchData();
   }, []);
-  const user = useUserStore.getState().user;
-  const isUserHaveAccess = user?.user_metadata.role === "Super-Admin";
+  const columnsArray = columns(fetchData);
+
   return (
     <div className="space-y-5 w-full overflow-y-auto px-3">
       <h1 className="text-3xl font-bold">Admin</h1>
 
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columnsArray} data={data} fetchData={fetchData} />
     </div>
   );
 }

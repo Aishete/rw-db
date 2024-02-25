@@ -49,9 +49,9 @@ const FormSchema = z
   });
 interface AdminFormProps {
   onSuccess?: () => void;
-  fatchData: () => void;
+  fetchData: () => void;
 }
-export default function CreateForm({ onSuccess, fatchData }: AdminFormProps) {
+export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
   const [ispedding, startTransition] = useTransition();
   const roles = ["Recruiter"];
   const status = ["active", "resigned"];
@@ -87,7 +87,7 @@ export default function CreateForm({ onSuccess, fatchData }: AdminFormProps) {
           if (onSuccess) {
             onSuccess();
           }
-          fatchData();
+          fetchData();
         }
       } catch (e) {
         toast({
@@ -95,7 +95,7 @@ export default function CreateForm({ onSuccess, fatchData }: AdminFormProps) {
           title: "An error occurred",
           description: (e as Error).message,
         });
-        fatchData();
+        fetchData();
       }
     });
   };

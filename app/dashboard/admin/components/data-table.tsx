@@ -11,14 +11,14 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
 } from "@tanstack/react-table";
+import { DataTablePagination } from "@/components/pagination";
+//for loading spinner
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { cn } from "@/lib/utils";
 import { CreateA } from "./create/CreateAdmin";
 import { role } from "../actions";
 
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -40,11 +40,13 @@ import { useEffect, useState } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  fetchData: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  fetchData,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -52,7 +54,6 @@ export function DataTable<TData, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
     data,
     columns,
@@ -62,7 +63,6 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
@@ -80,11 +80,18 @@ export function DataTable<TData, TValue>({
 
     fetchUserRole();
   }, []);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.resolve(fetchData())
+      .then(() => setIsLoading(false))
+      .catch(() => setIsLoading(false));
+  }, [fetchData]);
   return (
     <div>
       <div className=" flex items-center py-4">
         <Input
-          placeholder="Filter Names..."
+          placeholder="Filter Name..."
           value={(table.getColumn("Name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("Name")?.setFilterValue(event.target.value)
@@ -119,7 +126,7 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
         <div className="bg-white rounded-md border ml-2">
           {" "}
-          {isAdmin && <CreateA />}{" "}
+          {isAdmin && <CreateA fetchData={fetchData} />}{" "}
         </div>
       </div>
       <div className="bg-white rounded-md border">
@@ -165,32 +172,23 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {isLoading ? (
+                    <div className="flex justify-center">
+                      <AiOutlineLoading3Quarters
+                        className={cn("animate-spin h-6 w-6 text-gray-500")}
+                      />
+                    </div>
+                  ) : data.length ? null : (
+                    "No data"
+                  )}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          className="bg-white"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          className="bg-white"
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="mt-2">
+        <DataTablePagination table={table} />
       </div>
     </div>
   );

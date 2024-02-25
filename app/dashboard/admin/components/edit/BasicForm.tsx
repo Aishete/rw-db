@@ -26,7 +26,13 @@ const FormSchema = z.object({
     message: "Name must be at least 2 characters.",
   }),
 });
-export default function BasicForm({ admins }: { admins: AdminPer }) {
+export default function BasicForm({
+  admins,
+  fetchData,
+}: {
+  admins: AdminPer;
+  fetchData: () => void;
+}) {
   const [ispedding, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -51,6 +57,7 @@ export default function BasicForm({ admins }: { admins: AdminPer }) {
               description: <code className="text-white">{error.message}</code>,
             });
           } else {
+            fetchData();
             toast({
               variant: "success",
               title: "Successfully Update Name!",
@@ -72,6 +79,7 @@ export default function BasicForm({ admins }: { admins: AdminPer }) {
           title: "Error!",
           description: (e as Error).message,
         });
+        fetchData();
       }
     });
   };

@@ -33,10 +33,10 @@ const FormSchema = z
 
 export default function AccountForm({
   admins,
-  fatchData,
+  fetchData,
 }: {
   admins: RecruiterPer;
-  fatchData: () => void;
+  fetchData: () => void;
 }) {
   const [ispedding, startTransition] = useTransition();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -70,7 +70,7 @@ export default function AccountForm({
               variant: "success",
               title: "Successfully Update Account!",
             });
-            fatchData();
+            fetchData();
           }
         } else {
           // Handle the case where result is null or undefined
@@ -89,7 +89,7 @@ export default function AccountForm({
         description: (e as Error).message,
       });
     }
-    fatchData();
+    fetchData();
   }
   return (
     <Form {...form}>

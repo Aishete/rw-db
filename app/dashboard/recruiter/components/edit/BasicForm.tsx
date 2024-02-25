@@ -32,10 +32,10 @@ const FormSchema = z.object({
 
 export default function BasicForm({
   admins,
-  fatchData,
+  fetchData,
 }: {
   admins: RecruiterPer;
-  fatchData: () => void;
+  fetchData: () => void;
 }) {
   const [ispedding, startTransition] = useTransition();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -67,7 +67,7 @@ export default function BasicForm({
               variant: "success",
               title: "Successfully Update Name!",
             });
-            fatchData();
+            fetchData();
           }
           // Call fetchData regardless of whether an error occurred
         } else {
@@ -86,7 +86,7 @@ export default function BasicForm({
           description: (e as Error).message,
         });
       }
-      fatchData();
+      fetchData();
     });
   };
 

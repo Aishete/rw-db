@@ -8,9 +8,11 @@ import { AdminPer } from "@/lib/type";
 export default function EditForm({
   isAdmin,
   admins,
+  fetchData,
 }: {
   isAdmin?: boolean;
   admins: AdminPer;
+  fetchData: () => void;
 }) {
   return (
     <Tabs defaultValue="basic" className="w-full space-y-5">
@@ -26,15 +28,15 @@ export default function EditForm({
         )}
       </TabsList>
       <TabsContent value="basic">
-        <BasicForm admins={admins} />
+        <BasicForm admins={admins} fetchData={fetchData} />
       </TabsContent>
       {isAdmin && (
         <>
           <TabsContent value="account">
-            <AccountForm admins={admins} />
+            <AccountForm admins={admins} fetchData={fetchData} />
           </TabsContent>
           <TabsContent value="advance">
-            <AdvanceForm admins={admins} />
+            <AdvanceForm admins={admins} fetchData={fetchData} />
           </TabsContent>
         </>
       )}
