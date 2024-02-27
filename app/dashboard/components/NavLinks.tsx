@@ -19,7 +19,7 @@ export default function NavLinks() {
     },
     {
       href: "/dashboard/recruiter",
-      text: "Recroiter",
+      text: "Recruiter",
       Icon: CrumpledPaperIcon,
     },
   ];

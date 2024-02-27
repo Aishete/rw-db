@@ -2,7 +2,7 @@ import React from "react";
 import NavLinks from "./NavLinks";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import ModeToggle from "../candidate/components/ToggleDarkMode";
+import ModeToggle from "./ToggleDrakMode";
 import { SignOut } from "./alertbox";
 import { useUserStore } from "@/lib/store/user";
 import NavRecruiterLinks from "./Recuitertable";
@@ -30,7 +30,7 @@ export const SideBar = ({ className }: { className?: string }) => {
           <div className="flex items-center gap-2 flex-1">
             <h1 className="text-3xl font-bold">RW-Database</h1>
 
-            <ModeToggle />
+            {/* <ModeToggle /> */}
           </div>
           {isUserHaveAccess && <NavLinks />}
           {isUserHavenotAccess && <NavRecruiterLinks />}

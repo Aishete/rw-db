@@ -1,6 +1,5 @@
 "use client";
 
-import SearchMembers from "./components/SearchMembers";
 import { DataTable } from "./components/recuriterTable/data-table";
 import { columns, RecruiterPer } from "./components/recuriterTable/columns";
 import { readRecruiter } from "./actions";

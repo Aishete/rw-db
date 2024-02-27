@@ -26,3 +26,33 @@ export type RecruiterPer = {
     recruiter_name: string;
   };
 };
+
+export type CandidatePer = {
+  id: string;
+  created_at: string;
+  referral: string;
+  recruiterCID: string;
+  candidatenameeng: string;
+  candidatenamekh: string;
+  phone: string;
+  dateOfbirth: Date;
+  gender: "Male" | "Female";
+  province: string;
+  district: string;
+  commune: string;
+  village: string;
+  recruiter: {
+    id: string;
+    email: string;
+    created_at: string;
+    recruiter_code: string;
+    recruiter_name: string;
+  };
+};
+export type recruiter = {
+  id: string;
+  email: string;
+  created_at: string;
+  recruiter_code: string;
+  recruiter_name: string;
+};

@@ -50,7 +50,7 @@ const ActionCell = ({
           <DeleteForm user_id={AdminPer.admin_id} fetchData={fetchData} />
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem>View Recruiter details</DropdownMenuItem>
+        {/* <DropdownMenuItem>View Recruiter details</DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

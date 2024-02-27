@@ -14,6 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 import React, { ReactNode } from "react";
 
@@ -34,13 +35,15 @@ export default function DailogForm({
         {Trigger}
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when
-          </SheetDescription>
-          {form}
-        </SheetHeader>
+        <ScrollArea className="h-[900px]   w-[350px] ">
+          <SheetHeader>
+            <SheetTitle>{title}</SheetTitle>
+            <SheetDescription>
+              Make changes to your profile here. Click save when
+            </SheetDescription>
+            {form}
+          </SheetHeader>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
     // <Dialog>

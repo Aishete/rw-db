@@ -8,7 +8,7 @@ export default function NavRecruiterLinks() {
   const pathname = usePathname();
   const links = [
     {
-      href: "/dashboard/recruiterTable",
+      href: "/dashboard/candidate",
       text: "Candidates",
       Icon: CrumpledPaperIcon,
     },
