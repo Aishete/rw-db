@@ -49,7 +49,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { createCandidate, updateCandidateRecruiterById } from "../../actions";
+import {
+  updateCandidateRecruiterByAdminId,
+  updateCandidateRecruiterById,
+} from "../../actions";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { useTransition } from "react";
@@ -131,7 +134,7 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
         } else {
           toast({
             variant: "success",
-            title: "Successfully created Candidate!",
+            title: "Successfully update Candidate!",
           });
           fetchData();
         }
@@ -580,6 +583,8 @@ export function UpdateCreateFormAdmin({
   });
   const onSubmit = (data: z.infer<typeof FormSchemaAdmin>) => {
     startTransition(async () => {
+      const recruiterCID = form.getValues("recruiterCID");
+      data = { ...data, recruiterCID };
       try {
         const dateOfBirthDate = new Date(data.dateOfbirth);
         if (dateOfBirthDate.toString() === "Invalid Date") {
@@ -589,14 +594,16 @@ export function UpdateCreateFormAdmin({
         const updatedValues = {
           ...data,
           dateOfbirth: dateOfBirthDate,
+          recruiterCID: data.recruiterCID,
         };
+
         const result = FormSchema.safeParse(updatedValues);
         if (!result.success) {
           // Handle validation errors
           console.error(result.error);
           return;
         }
-        await updateCandidateRecruiterById(Candidates.id, updatedValues);
+        await updateCandidateRecruiterByAdminId(Candidates.id, updatedValues);
         const { error } = JSON.parse(JSON.stringify(result));
         if (error?.message) {
           toast({
@@ -607,7 +614,7 @@ export function UpdateCreateFormAdmin({
         } else {
           toast({
             variant: "success",
-            title: "Successfully created Candidate!",
+            title: "Successfully update Candidate!",
           });
           fetchData();
         }
@@ -695,8 +702,8 @@ export function UpdateCreateFormAdmin({
                                 key={recruiter.id}
                                 value={recruiter.recruiter_name}
                                 onSelect={() => {
-                                  field.onChange(recruiter.id),
-                                    form.setValue("recruiterCID", recruiter.id);
+                                  field.onChange(recruiter.id);
+                                  form.setValue("recruiterCID", recruiter.id);
                                 }}
                               >
                                 <Check

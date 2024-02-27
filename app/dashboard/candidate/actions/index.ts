@@ -6,8 +6,8 @@ import { revalidatePath, unstable_noStore } from "next/cache";
 export async function role() {
   const { data: userSession } = await readUserSession();
   if (
-    userSession.session?.user.user_metadata.role !== "Super-Admin" ||
-    userSession.session?.user.user_metadata.role !== "Admin"
+    userSession.session?.user.user_metadata.role === "Super-Admin" ||
+    userSession.session?.user.user_metadata.role === "Admin"
   ) {
     const useUserAccess = false;
     return useUserAccess;
@@ -117,31 +117,6 @@ export async function createCandidateByAdmin(data: {
   return { insertCandidateError };
 }
 
-export async function updateCandidateAdminById(
-  id: string,
-  user_id: string,
-  data: { role: "Recruiter"; Status: "active" | "resigned" }
-) {
-  const supabaseAdmin = await createSupbaseAdmin();
-  const result = await supabaseAdmin.auth.admin.updateUserById(user_id, {
-    user_metadata: { role: data.role },
-  });
-  if (result.error) {
-    throw result.error;
-  } else {
-    const supabase = await createSupbaseServerClient();
-    const { data: updatedData, error } = await supabase
-      .from("Recruiter_permission")
-      .update(data)
-      .eq("id", id);
-    if (error) {
-      throw error;
-    } else {
-      return { updatedData }; // Return the updated data
-    }
-  }
-}
-
 export async function updateCandidateRecruiterById(
   id: string,
   data: {
@@ -170,6 +145,56 @@ export async function updateCandidateRecruiterById(
   const result = await supabase
     .from("Candidates") //ensure the table name is correct
     .update(data)
+    .eq("id", id);
+
+  if (result.error) {
+    return { error: result.error.message };
+  } else {
+    // Return the updated data
+    return { result };
+  }
+}
+export async function updateCandidateRecruiterByAdminId(
+  id: string,
+  data: {
+    referral: string;
+    recruiterCID: string;
+    candidatenameeng: string;
+    candidatenamekh: string;
+    phone: string;
+    dateOfbirth: Date; // Change this to string
+    gender: "Male" | "Female";
+    province: string;
+    district: string;
+    commune: string;
+    village: string;
+  }
+) {
+  const supabase = await createSupbaseServerClient();
+
+  // Convert dateOfbirth to Date object
+  const dateOfBirthDate = new Date(data.dateOfbirth);
+  if (dateOfBirthDate.toString() === "Invalid Date") {
+    return { error: "Invalid date of birth" };
+  }
+
+  // Replace dateOfbirth string with Date object
+
+  const result = await supabase
+    .from("Candidates") //ensure the table name is correct
+    .update({
+      referral: data.referral,
+      recruiterCID: data.recruiterCID,
+      candidatenameeng: data.candidatenameeng,
+      candidatenamekh: data.candidatenamekh,
+      phone: data.phone,
+      dateOfbirth: data.dateOfbirth,
+      gender: data.gender,
+      province: data.province,
+      district: data.district,
+      commune: data.commune,
+      village: data.village,
+    })
     .eq("id", id);
 
   if (result.error) {
