@@ -1,8 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import BasicForm from "./BasicForm";
 import CreateForm, { UpdateCreateFormAdmin } from "./upCandidateform";
-import AdvanceForm from "./AdvanceForm";
-import { cn } from "@/lib/utils";
+
 import { CandidatePer, RecruiterPer } from "@/lib/type";
 import { role } from "../../actions";
 import { useEffect, useState } from "react";
