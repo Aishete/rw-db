@@ -233,6 +233,7 @@ export default function AdminForm({ onSuccess, fetchData }: AdminFormProps) {
             className={cn("animate-spin", { hidden: !ispedding })}
           />
         </Button>
+        <div className="mb-8"></div>
       </form>
     </Form>
   );

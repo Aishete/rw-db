@@ -106,8 +106,9 @@ export function DataTable<TData, TValue>({
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className=" bg-white ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+            <Button variant="outline" className=" bg-white ml-auto mr-2">
+              <p className="hidden sm:inline">Columns</p>
+              <ChevronDownIcon className=" h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -130,7 +131,7 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className="bg-white rounded-md border ml-2">
+        <div className="bg-white rounded-md border ">
           {" "}
           {isAdmin && <CreateA fetchData={fetchData} />}{" "}
         </div>

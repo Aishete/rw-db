@@ -20,7 +20,11 @@ export function CreateA({ fetchData }: { fetchData: () => void }) {
     <DailogForm
       id="create-trigger"
       title="Create Recruiter"
-      Trigger={<Button variant="outline">Create+</Button>}
+      Trigger={
+        <Button variant="outline">
+          <p className="hidden sm:inline">Create </p>+
+        </Button>
+      }
       form={<CreateForm fetchData={fetchData} />}
     />
   );

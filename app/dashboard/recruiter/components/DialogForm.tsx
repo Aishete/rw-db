@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import React, { ReactNode } from "react";
 
@@ -35,7 +35,7 @@ export default function DailogForm({
         {Trigger}
       </SheetTrigger>
       <SheetContent>
-        <ScrollArea className="h-[900px]   w-[350px] ">
+        <ScrollArea className="max-h-screen overflow-y-auto">
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
             <SheetDescription>

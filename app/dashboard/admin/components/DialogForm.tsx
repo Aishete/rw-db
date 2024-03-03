@@ -15,7 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
 export default function DailogForm({
   Trigger,
   id,
@@ -33,13 +33,15 @@ export default function DailogForm({
         {Trigger}
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when
-          </SheetDescription>
-          {form}
-        </SheetHeader>
+        <ScrollArea className="max-h-screen overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>{title}</SheetTitle>
+            <SheetDescription>
+              Make changes to your profile here. Click save when
+            </SheetDescription>
+            {form}
+          </SheetHeader>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
     // <Dialog>

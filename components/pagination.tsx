@@ -24,20 +24,20 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        Showing{table.getRowModel().rows.length} of{" "}
+      <div className=" hidden md:inline flex-1 text-sm text-muted-foreground">
+        Showing {table.getRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} total data.
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+          <p className="hidden md:inline text-sm font-medium">Rows per page</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px] bg-inherit">
+            <SelectTrigger className="h-8 w-[70px] bg-inherit items-end">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
@@ -49,11 +49,11 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium bg-inherit">
+        <div className="hidden md:inline flex w-[100px] items-center justify-center text-sm font-medium bg-inherit">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
         </div>
-        <div className="flex items-center space-x-2 bg-inherit">
+        <div className="flex items-end space-x-2 bg-inherit">
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"

@@ -167,297 +167,227 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-        <ScrollArea className=" w-full ">
-          <div className="border-b border-gray-900/10 ">
+        <div className="border-b border-gray-900/10 ">
+          <FormField
+            control={form.control}
+            name="referral"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Referral</FormLabel>
+                <FormControl>
+                  <Input placeholder="#" {...field} />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="border-b border-gray-900/10 pb-2">
+          <div>
             <FormField
               control={form.control}
-              name="referral"
+              name="candidatenameeng"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Referral</FormLabel>
+                  <FormLabel>Candidate Name English</FormLabel>
                   <FormControl>
-                    <Input placeholder="#" {...field} />
+                    <Input placeholder="Name in English " {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-          <div className="border-b border-gray-900/10 pb-2">
-            <div>
-              <FormField
-                control={form.control}
-                name="candidatenameeng"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Candidate Name English</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name in English " {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="candidatenamekh"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Candidate Name Khmer</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name in Khmer" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone number</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="Phone Number" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="gender"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Gender</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Gender" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Gender</SelectLabel>
-                          <SelectItem value="Male">Male</SelectItem>
-                          <SelectItem value="Female">Female</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dateOfbirth"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of birth</FormLabel>
-                    <div className="relative w-[280px]">
-                      <Popover open={openCender} onOpenChange={setOpenCender}>
-                        <div className="relative w-[280px]">
-                          <Input
-                            placeholder="MM/DD/YYYY"
-                            {...field}
-                            value={
-                              stringDate || field.value
-                                ? format(new Date(field.value), "MM/dd/yyyy")
-                                : ""
-                            }
-                            aria-expanded={openCender}
-                            onChange={(e) => {
-                              setStringDate(e.target.value);
-                              const parsedDate = new Date(e.target.value);
-                              if (parsedDate.toString() === "Invalid Date") {
-                                setErrorMessage("Invalid Date");
-                                setDate(undefined);
-                              } else {
-                                setErrorMessage("");
-                                setDate(parsedDate);
-                                form.setValue("dateOfbirth", parsedDate);
-                              }
-                            }}
-                          />
-                          {errorMessage !== "" && (
-                            <div className="absolute bottom-[-1.75rem] left-0 text-red-400 text-sm">
-                              {errorMessage}
-                            </div>
-                          )}
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "font-normal absolute right-0 translate-y-[-50%] top-[50%] rounded-l-none",
-                                !date && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="w-4 h-4" />
-                            </Button>
-                          </PopoverTrigger>
-                        </div>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={(selectedDate) => {
-                              if (!selectedDate) return;
-                              setDate(selectedDate);
-                              setStringDate(format(selectedDate, "MM/dd/yyyy"));
+            <FormField
+              control={form.control}
+              name="candidatenamekh"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Candidate Name Khmer</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name in Khmer" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone number</FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="Phone Number" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Gender</SelectLabel>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateOfbirth"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date of birth</FormLabel>
+                  <div className="relative w-[280px]">
+                    <Popover open={openCender} onOpenChange={setOpenCender}>
+                      <div className="relative w-[280px]">
+                        <Input
+                          placeholder="MM/DD/YYYY"
+                          {...field}
+                          value={
+                            stringDate || field.value
+                              ? format(new Date(field.value), "MM/dd/yyyy")
+                              : ""
+                          }
+                          aria-expanded={openCender}
+                          onChange={(e) => {
+                            setStringDate(e.target.value);
+                            const parsedDate = new Date(e.target.value);
+                            if (parsedDate.toString() === "Invalid Date") {
+                              setErrorMessage("Invalid Date");
+                              setDate(undefined);
+                            } else {
                               setErrorMessage("");
-                              form.setValue("dateOfbirth", selectedDate);
-                              setOpenCender(false);
-                            }}
-                            defaultMonth={date}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
+                              setDate(parsedDate);
+                              form.setValue("dateOfbirth", parsedDate);
                             }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="province"
-                render={({ field }) => {
-                  // Open the district selection if a province is already selected
-                  if (field.value) {
-                    setSelectedProvince(field.value);
-                  }
-
-                  return (
-                    <FormItem className="w-full">
-                      <FormLabel>Province</FormLabel>
-                      <div>
-                        <Popover
-                          open={openProvince}
-                          onOpenChange={setOpenProvince}
-                        >
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={openProvince}
-                                className="w-[200px] justify-between"
-                              >
-                                {field.value
-                                  ? province.find(
-                                      (p) => p.value === field.value
-                                    )?.label
-                                  : "Select Province"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search provinces..." />
-                              <CommandEmpty>No provinces found.</CommandEmpty>
-                              <CommandGroup>
-                                <ScrollArea className="h-72 w-48 rounded-md border">
-                                  {province.map((provinceItem) => (
-                                    <CommandItem
-                                      key={provinceItem.value}
-                                      value={provinceItem.label}
-                                      onSelect={() => {
-                                        field.onChange(
-                                          handleProvinceSelect(
-                                            provinceItem.value
-                                          )
-                                        );
-                                        form.setValue(
-                                          "province",
-                                          provinceItem.value
-                                        );
-                                        setOpenProvince(false);
-                                      }}
-                                    >
-                                      <Check
-                                        className={`mr-2 h-4 w-4 ${
-                                          provinceItem.value === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        }`}
-                                      />
-                                      {provinceItem.label}
-                                    </CommandItem>
-                                  ))}
-                                </ScrollArea>
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
+                          }}
+                        />
+                        {errorMessage !== "" && (
+                          <div className="absolute bottom-[-1.75rem] left-0 text-red-400 text-sm">
+                            {errorMessage}
+                          </div>
+                        )}
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "font-normal absolute right-0 translate-y-[-50%] top-[50%] rounded-l-none",
+                              !date && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="w-4 h-4" />
+                          </Button>
+                        </PopoverTrigger>
                       </div>
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                name="district"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>District</FormLabel>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={(selectedDate) => {
+                            if (!selectedDate) return;
+                            setDate(selectedDate);
+                            setStringDate(format(selectedDate, "MM/dd/yyyy"));
+                            setErrorMessage("");
+                            form.setValue("dateOfbirth", selectedDate);
+                            setOpenCender(false);
+                          }}
+                          defaultMonth={date}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="province"
+              render={({ field }) => {
+                // Open the district selection if a province is already selected
+                if (field.value) {
+                  setSelectedProvince(field.value);
+                }
+
+                return (
+                  <FormItem className="w-full">
+                    <FormLabel>Province</FormLabel>
                     <div>
                       <Popover
-                        open={openDistrict}
-                        onOpenChange={setOpenDistrict}
+                        open={openProvince}
+                        onOpenChange={setOpenProvince}
                       >
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant="outline"
                               role="combobox"
-                              aria-expanded={openDistrict}
+                              aria-expanded={openProvince}
                               className="w-[200px] justify-between"
                             >
-                              {field.value && selectedProvince
-                                ? district[selectedProvince]?.find(
-                                    (district) => district === field.value
-                                  )
-                                : "Select District"}
+                              {field.value
+                                ? province.find((p) => p.value === field.value)
+                                    ?.label
+                                : "Select Province"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                           <Command>
-                            <CommandInput placeholder="Search districts..." />
-                            <CommandEmpty>No districts found.</CommandEmpty>
+                            <CommandInput placeholder="Search provinces..." />
+                            <CommandEmpty>No provinces found.</CommandEmpty>
                             <CommandGroup>
                               <ScrollArea className="h-72 w-48 rounded-md border">
-                                {selectedProvince &&
-                                  district[selectedProvince] &&
-                                  district[selectedProvince].map(
-                                    (districtName) => (
-                                      <CommandItem
-                                        key={districtName}
-                                        value={districtName}
-                                        onSelect={() => {
-                                          field.onChange(districtName),
-                                            setOpenDistrict(false);
-                                        }}
-                                      >
-                                        <Check
-                                          className={`mr-2 h-4 w-4 ${
-                                            districtName === field.value
-                                              ? "opacity-100"
-                                              : "opacity-0"
-                                          }`}
-                                        />
-                                        {districtName}
-                                      </CommandItem>
-                                    )
-                                  )}
+                                {province.map((provinceItem) => (
+                                  <CommandItem
+                                    key={provinceItem.value}
+                                    value={provinceItem.label}
+                                    onSelect={() => {
+                                      field.onChange(
+                                        handleProvinceSelect(provinceItem.value)
+                                      );
+                                      form.setValue(
+                                        "province",
+                                        provinceItem.value
+                                      );
+                                      setOpenProvince(false);
+                                    }}
+                                  >
+                                    <Check
+                                      className={`mr-2 h-4 w-4 ${
+                                        provinceItem.value === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      }`}
+                                    />
+                                    {provinceItem.label}
+                                  </CommandItem>
+                                ))}
                               </ScrollArea>
                             </CommandGroup>
                           </Command>
@@ -465,54 +395,109 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
                       </Popover>
                     </div>
                   </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="commune"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Commune</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter commune name" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="village"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Village</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter village name" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                );
+              }}
+            />
+            <FormField
+              name="district"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>District</FormLabel>
+                  <div>
+                    <Popover open={openDistrict} onOpenChange={setOpenDistrict}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openDistrict}
+                            className="w-[200px] justify-between"
+                          >
+                            {field.value && selectedProvince
+                              ? district[selectedProvince]?.find(
+                                  (district) => district === field.value
+                                )
+                              : "Select District"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search districts..." />
+                          <CommandEmpty>No districts found.</CommandEmpty>
+                          <CommandGroup>
+                            <ScrollArea className="h-72 w-48 rounded-md border">
+                              {selectedProvince &&
+                                district[selectedProvince] &&
+                                district[selectedProvince].map(
+                                  (districtName) => (
+                                    <CommandItem
+                                      key={districtName}
+                                      value={districtName}
+                                      onSelect={() => {
+                                        field.onChange(districtName),
+                                          setOpenDistrict(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={`mr-2 h-4 w-4 ${
+                                          districtName === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        }`}
+                                      />
+                                      {districtName}
+                                    </CommandItem>
+                                  )
+                                )}
+                            </ScrollArea>
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="commune"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Commune</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter commune name" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="village"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Village</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter village name" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <div className="mt-6 flex justify-end gap-4">
-            <Link
-              href="/home/candidate"
-              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-            >
-              Cancel
-            </Link>
-
-            <Button type="submit">
-              Update
-              <AiOutlineLoading3Quarters
-                className={cn("animate-spin", { hidden: !ispedding })}
-              />
-            </Button>
-          </div>
-        </ScrollArea>
+        </div>
+        <div className="mt-6 flex justify-end gap-4">
+          <Button type="submit">
+            Update
+            <AiOutlineLoading3Quarters
+              className={cn("animate-spin", { hidden: !ispedding })}
+            />
+          </Button>
+        </div>
       </form>
     </Form>
   );
@@ -649,356 +634,286 @@ export function UpdateCreateFormAdmin({
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full space-y-6 h-full"
       >
-        <ScrollArea className="h-[900px]   w-[350px] ">
-          <div className="border-b border-gray-900/10 ">
+        <div className="border-b border-gray-900/10 ">
+          <FormField
+            control={form.control}
+            name="referral"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Referral</FormLabel>
+                <FormControl>
+                  <Input placeholder="#" {...field} />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="recruiterCID"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Recruiter Name</FormLabel>
+              <div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={openProvince}
+                        className="w-[200px] justify-between"
+                      >
+                        {field.value
+                          ? recruiters.find((r) => r.id === field.value)
+                              ?.recruiter_name
+                          : "Select Recruiter"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search recruiters..." />
+                      <CommandEmpty>No recruiters found.</CommandEmpty>
+                      <CommandGroup>
+                        <ScrollArea className="h-72 w-48 rounded-md border">
+                          {recruiters.map((recruiter) => (
+                            <CommandItem
+                              key={recruiter.id}
+                              value={recruiter.recruiter_name}
+                              onSelect={() => {
+                                field.onChange(recruiter.id);
+                                form.setValue("recruiterCID", recruiter.id);
+                              }}
+                            >
+                              <Check
+                                className={`mr-2 h-4 w-4 ${
+                                  recruiter.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                }`}
+                              />
+                              {recruiter.recruiter_name}
+                            </CommandItem>
+                          ))}
+                        </ScrollArea>
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </FormItem>
+          )}
+        />
+        <div className="border-b border-gray-900/10 pb-2">
+          <div>
             <FormField
               control={form.control}
-              name="referral"
+              name="candidatenameeng"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Referral</FormLabel>
+                  <FormLabel>Candidate Name English</FormLabel>
                   <FormControl>
-                    <Input placeholder="#" {...field} />
+                    <Input placeholder="Name in English " {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-
-          <FormField
-            control={form.control}
-            name="recruiterCID"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Recruiter Name</FormLabel>
-                <div>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={openProvince}
-                          className="w-[200px] justify-between"
-                        >
-                          {field.value
-                            ? recruiters.find((r) => r.id === field.value)
-                                ?.recruiter_name
-                            : "Select Recruiter"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search recruiters..." />
-                        <CommandEmpty>No recruiters found.</CommandEmpty>
-                        <CommandGroup>
-                          <ScrollArea className="h-72 w-48 rounded-md border">
-                            {recruiters.map((recruiter) => (
-                              <CommandItem
-                                key={recruiter.id}
-                                value={recruiter.recruiter_name}
-                                onSelect={() => {
-                                  field.onChange(recruiter.id);
-                                  form.setValue("recruiterCID", recruiter.id);
-                                }}
-                              >
-                                <Check
-                                  className={`mr-2 h-4 w-4 ${
-                                    recruiter.id === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  }`}
-                                />
-                                {recruiter.recruiter_name}
-                              </CommandItem>
-                            ))}
-                          </ScrollArea>
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </FormItem>
-            )}
-          />
-          <div className="border-b border-gray-900/10 pb-2">
-            <div>
-              <FormField
-                control={form.control}
-                name="candidatenameeng"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Candidate Name English</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name in English " {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="candidatenamekh"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Candidate Name Khmer</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name in Khmer" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone number</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="Phone Number" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="gender"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Gender</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Gender" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Gender</SelectLabel>
-                          <SelectItem value="Male">Male</SelectItem>
-                          <SelectItem value="Female">Female</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dateOfbirth"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of birth</FormLabel>
-                    <div className="relative w-[280px]">
-                      <Popover open={openCender} onOpenChange={setOpenCender}>
-                        <div className="relative w-[280px]">
-                          <Input
-                            placeholder="MM/DD/YYYY"
-                            {...field}
-                            value={
-                              stringDate || field.value
-                                ? format(new Date(field.value), "MM/dd/yyyy")
-                                : ""
-                            }
-                            aria-expanded={openCender}
-                            onChange={(e) => {
-                              setStringDate(e.target.value);
-                              const parsedDate = new Date(e.target.value);
-                              if (parsedDate.toString() === "Invalid Date") {
-                                setErrorMessage("Invalid Date");
-                                setDate(undefined);
-                              } else {
-                                setErrorMessage("");
-                                setDate(parsedDate);
-                                form.setValue("dateOfbirth", parsedDate);
-                              }
-                            }}
-                          />
-                          {errorMessage !== "" && (
-                            <div className="absolute bottom-[-1.75rem] left-0 text-red-400 text-sm">
-                              {errorMessage}
-                            </div>
-                          )}
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "font-normal absolute right-0 translate-y-[-50%] top-[50%] rounded-l-none",
-                                !date && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="w-4 h-4" />
-                            </Button>
-                          </PopoverTrigger>
-                        </div>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={(selectedDate) => {
-                              if (!selectedDate) return;
-                              setDate(selectedDate);
-                              setStringDate(format(selectedDate, "MM/dd/yyyy"));
+            <FormField
+              control={form.control}
+              name="candidatenamekh"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Candidate Name Khmer</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name in Khmer" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone number</FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="Phone Number" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Gender</SelectLabel>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateOfbirth"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date of birth</FormLabel>
+                  <div className="relative w-[280px]">
+                    <Popover open={openCender} onOpenChange={setOpenCender}>
+                      <div className="relative w-[280px]">
+                        <Input
+                          placeholder="MM/DD/YYYY"
+                          {...field}
+                          value={
+                            stringDate || field.value
+                              ? format(new Date(field.value), "MM/dd/yyyy")
+                              : ""
+                          }
+                          aria-expanded={openCender}
+                          onChange={(e) => {
+                            setStringDate(e.target.value);
+                            const parsedDate = new Date(e.target.value);
+                            if (parsedDate.toString() === "Invalid Date") {
+                              setErrorMessage("Invalid Date");
+                              setDate(undefined);
+                            } else {
                               setErrorMessage("");
-                              form.setValue("dateOfbirth", selectedDate);
-                              setOpenCender(false);
-                            }}
-                            defaultMonth={date}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
+                              setDate(parsedDate);
+                              form.setValue("dateOfbirth", parsedDate);
                             }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="province"
-                render={({ field }) => {
-                  // Open the district selection if a province is already selected
-                  if (field.value) {
-                    setSelectedProvince(field.value);
-                  }
-
-                  return (
-                    <FormItem className="w-full">
-                      <FormLabel>Province</FormLabel>
-                      <div>
-                        <Popover
-                          open={openProvince}
-                          onOpenChange={setOpenProvince}
-                        >
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={openProvince}
-                                className="w-[200px] justify-between"
-                              >
-                                {field.value
-                                  ? province.find(
-                                      (p) => p.value === field.value
-                                    )?.label
-                                  : "Select Province"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search provinces..." />
-                              <CommandEmpty>No provinces found.</CommandEmpty>
-                              <CommandGroup>
-                                <ScrollArea className="h-72 w-48 rounded-md border">
-                                  {province.map((provinceItem) => (
-                                    <CommandItem
-                                      key={provinceItem.value}
-                                      value={provinceItem.label}
-                                      onSelect={() => {
-                                        field.onChange(
-                                          handleProvinceSelect(
-                                            provinceItem.value
-                                          )
-                                        );
-                                        form.setValue(
-                                          "province",
-                                          provinceItem.value
-                                        );
-                                        setOpenProvince(false);
-                                      }}
-                                    >
-                                      <Check
-                                        className={`mr-2 h-4 w-4 ${
-                                          provinceItem.value === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        }`}
-                                      />
-                                      {provinceItem.label}
-                                    </CommandItem>
-                                  ))}
-                                </ScrollArea>
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
+                          }}
+                        />
+                        {errorMessage !== "" && (
+                          <div className="absolute bottom-[-1.75rem] left-0 text-red-400 text-sm">
+                            {errorMessage}
+                          </div>
+                        )}
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "font-normal absolute right-0 translate-y-[-50%] top-[50%] rounded-l-none",
+                              !date && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="w-4 h-4" />
+                          </Button>
+                        </PopoverTrigger>
                       </div>
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                name="district"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>District</FormLabel>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={(selectedDate) => {
+                            if (!selectedDate) return;
+                            setDate(selectedDate);
+                            setStringDate(format(selectedDate, "MM/dd/yyyy"));
+                            setErrorMessage("");
+                            form.setValue("dateOfbirth", selectedDate);
+                            setOpenCender(false);
+                          }}
+                          defaultMonth={date}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="province"
+              render={({ field }) => {
+                // Open the district selection if a province is already selected
+                if (field.value) {
+                  setSelectedProvince(field.value);
+                }
+
+                return (
+                  <FormItem className="w-full">
+                    <FormLabel>Province</FormLabel>
                     <div>
                       <Popover
-                        open={openDistrict}
-                        onOpenChange={setOpenDistrict}
+                        open={openProvince}
+                        onOpenChange={setOpenProvince}
                       >
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant="outline"
                               role="combobox"
-                              aria-expanded={openDistrict}
+                              aria-expanded={openProvince}
                               className="w-[200px] justify-between"
                             >
-                              {field.value && selectedProvince
-                                ? district[selectedProvince]?.find(
-                                    (district) => district === field.value
-                                  )
-                                : "Select District"}
+                              {field.value
+                                ? province.find((p) => p.value === field.value)
+                                    ?.label
+                                : "Select Province"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                           <Command>
-                            <CommandInput placeholder="Search districts..." />
-                            <CommandEmpty>No districts found.</CommandEmpty>
+                            <CommandInput placeholder="Search provinces..." />
+                            <CommandEmpty>No provinces found.</CommandEmpty>
                             <CommandGroup>
                               <ScrollArea className="h-72 w-48 rounded-md border">
-                                {selectedProvince &&
-                                  district[selectedProvince] &&
-                                  district[selectedProvince].map(
-                                    (districtName) => (
-                                      <CommandItem
-                                        key={districtName}
-                                        value={districtName}
-                                        onSelect={() => {
-                                          field.onChange(districtName),
-                                            setOpenDistrict(false);
-                                        }}
-                                      >
-                                        <Check
-                                          className={`mr-2 h-4 w-4 ${
-                                            districtName === field.value
-                                              ? "opacity-100"
-                                              : "opacity-0"
-                                          }`}
-                                        />
-                                        {districtName}
-                                      </CommandItem>
-                                    )
-                                  )}
+                                {province.map((provinceItem) => (
+                                  <CommandItem
+                                    key={provinceItem.value}
+                                    value={provinceItem.label}
+                                    onSelect={() => {
+                                      field.onChange(
+                                        handleProvinceSelect(provinceItem.value)
+                                      );
+                                      form.setValue(
+                                        "province",
+                                        provinceItem.value
+                                      );
+                                      setOpenProvince(false);
+                                    }}
+                                  >
+                                    <Check
+                                      className={`mr-2 h-4 w-4 ${
+                                        provinceItem.value === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      }`}
+                                    />
+                                    {provinceItem.label}
+                                  </CommandItem>
+                                ))}
                               </ScrollArea>
                             </CommandGroup>
                           </Command>
@@ -1006,46 +921,101 @@ export function UpdateCreateFormAdmin({
                       </Popover>
                     </div>
                   </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="commune"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Commune</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter commune name" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="village"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Village</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter village name" {...field} />
-                    </FormControl>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                );
+              }}
+            />
+            <FormField
+              name="district"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>District</FormLabel>
+                  <div>
+                    <Popover open={openDistrict} onOpenChange={setOpenDistrict}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openDistrict}
+                            className="w-[200px] justify-between"
+                          >
+                            {field.value && selectedProvince
+                              ? district[selectedProvince]?.find(
+                                  (district) => district === field.value
+                                )
+                              : "Select District"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search districts..." />
+                          <CommandEmpty>No districts found.</CommandEmpty>
+                          <CommandGroup>
+                            <ScrollArea className="h-72 w-48 rounded-md border">
+                              {selectedProvince &&
+                                district[selectedProvince] &&
+                                district[selectedProvince].map(
+                                  (districtName) => (
+                                    <CommandItem
+                                      key={districtName}
+                                      value={districtName}
+                                      onSelect={() => {
+                                        field.onChange(districtName),
+                                          setOpenDistrict(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={`mr-2 h-4 w-4 ${
+                                          districtName === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        }`}
+                                      />
+                                      {districtName}
+                                    </CommandItem>
+                                  )
+                                )}
+                            </ScrollArea>
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="commune"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Commune</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter commune name" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="village"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Village</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter village name" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <div className="mt-6 flex justify-end gap-4">
-            <Link
-              href="/home/candidate"
-              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-            >
-              Cancel
-            </Link>
-
             <Button type="submit">
               Update
               <AiOutlineLoading3Quarters
@@ -1053,7 +1023,8 @@ export function UpdateCreateFormAdmin({
               />
             </Button>
           </div>
-        </ScrollArea>
+          <div className="mb-4"></div>
+        </div>
       </form>
     </Form>
   );

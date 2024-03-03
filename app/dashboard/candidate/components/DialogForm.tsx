@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sheet";
 
 import React, { ReactNode } from "react";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
 export default function DailogForm({
   Trigger,
   id,
@@ -33,14 +33,16 @@ export default function DailogForm({
       <SheetTrigger asChild id={id}>
         {Trigger}
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when
-          </SheetDescription>
+      <SheetContent className="w-full sm:w-[350px]">
+        <ScrollArea className="max-h-screen overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>{title}</SheetTitle>
+            <SheetDescription>
+              Make changes to your profile here. Click save when done.
+            </SheetDescription>
+          </SheetHeader>
           {form}
-        </SheetHeader>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
     // <Dialog>
