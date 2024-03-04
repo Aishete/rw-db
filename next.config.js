@@ -10,7 +10,8 @@ const withPWA = require("next-pwa")({
   dest: "public", // Destination directory for the PWA files
   disable: process.env.NODE_ENV === "development", // Disable PWA in development mode
   register: true, // Register the PWA service worker
-  skipWaiting: true, // Skip waiting for service worker activation
+  skipWaiting: true,
+  // Skip waiting for service worker activation
   runtimeCaching: [
     {
       urlPattern: /^https?.*/,
@@ -24,6 +25,7 @@ const withPWA = require("next-pwa")({
       },
     },
   ],
+  buildExcludes: [/middleware-manifest.json$/],
 });
 
 // Export the combined configuration for Next.js with PWA support
