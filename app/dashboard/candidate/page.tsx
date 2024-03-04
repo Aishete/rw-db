@@ -1,5 +1,5 @@
 "use client";
-
+import localForage from "localforage";
 import { DataTable } from "./components/recuriterTable/data-table";
 import { columns } from "./components/recuriterTable/columns";
 import { CandidatePer } from "@/lib/type";
@@ -35,8 +35,17 @@ export default function Candidates() {
   const [data, setData] = useState<CandidatePer[]>([]);
 
   const fetchData = async () => {
-    const result = await fetchCandidate();
-    setData(result);
+    // Try to load the data from IndexedDB first
+    const cachedData = await localForage.getItem<CandidatePer[]>("Candidates");
+    if (cachedData) {
+      setData(cachedData);
+    } else {
+      // If not found in cache, fetch from Supabase
+      const result = await fetchCandidate();
+      setData(result);
+      // And cache the data for future offline use
+      await localForage.setItem("Candidates", result);
+    }
   };
 
   useEffect(() => {

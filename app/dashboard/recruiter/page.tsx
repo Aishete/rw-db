@@ -1,5 +1,6 @@
 "use client";
 
+import localForage from "localforage";
 import { DataTable } from "./components/recuriterTable/data-table";
 import { columns, RecruiterPer } from "./components/recuriterTable/columns";
 import { readRecruiter } from "./actions";
@@ -26,10 +27,18 @@ export default function Recruiter() {
   const [data, setData] = useState<RecruiterPer[]>([]);
 
   const fetchData = async () => {
-    const result = await fetchRecruiter();
-    setData(result);
+    // Try to load the data from IndexedDB first
+    const cachedData = await localForage.getItem<RecruiterPer[]>("Recruiter");
+    if (cachedData) {
+      setData(cachedData);
+    } else {
+      // If not found in cache, fetch from Supabase
+      const result = await fetchRecruiter();
+      setData(result);
+      // And cache the data for future offline use
+      await localForage.setItem("Recruiter", result);
+    }
   };
-
   useEffect(() => {
     fetchData();
   }, []);

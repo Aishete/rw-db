@@ -1,9 +1,10 @@
 "use client";
-
+import localForage from "localforage";
 import React, { useState, useEffect } from "react";
 import { DataTable } from "./components/data-table";
 import { readAdmin } from "./actions";
 import { columns, AdminPer } from "./components/columns";
+
 async function fetchAdmin(): Promise<AdminPer[]> {
   const { data: admins } = await readAdmin();
   return (admins as AdminPer[]).map((admin) => ({
@@ -22,21 +23,53 @@ async function fetchAdmin(): Promise<AdminPer[]> {
 }
 export default function Admin() {
   const [data, setData] = useState<AdminPer[]>([]);
+  const [isOffline, setIsOffline] = useState(false);
 
-  const fetchData = async () => {
+  const fetchCachedData = async () => {
+    const cachedData = await localForage.getItem<AdminPer[]>("admins");
+    if (cachedData) {
+      setData(cachedData);
+    } else {
+      setIsOffline(true);
+    }
+  };
+
+  const fetchFromDatabase = async () => {
     const result = await fetchAdmin();
     setData(result);
+    await localForage.setItem("admins", result);
+    setIsOffline(false);
   };
+
   useEffect(() => {
-    fetchData();
-  }, []);
-  const columnsArray = columns(fetchData);
+    fetchCachedData();
+    fetchFromDatabase();
+
+    const interval = setInterval(() => {
+      if (!isOffline) {
+        fetchFromDatabase();
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [isOffline]);
+
+  const columnsArray = columns(fetchFromDatabase);
 
   return (
     <div className="space-y-5 w-full overflow-y-auto px-3">
       <h1 className="text-3xl font-bold">Admin</h1>
-
-      <DataTable columns={columnsArray} data={data} fetchData={fetchData} />
+      {isOffline && (
+        <p>
+          You are currently offline. Using cached data. Connect to the internet
+          to fetch new data.
+        </p>
+      )}
+      <DataTable
+        columns={columnsArray}
+        data={data}
+        fetchData={fetchFromDatabase}
+      />
     </div>
   );
 }

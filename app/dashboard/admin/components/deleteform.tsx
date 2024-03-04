@@ -54,7 +54,7 @@ export default function DeleteForm({
           className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-red-600 hover:text-white hover:shadow-2xl md:flex-none md:justify-start md:p-2 md:px-3"
         >
           <TrashIcon />
-          <div className="hidden md:block">Delete</div>
+          <div>Delete</div>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -66,46 +66,21 @@ export default function DeleteForm({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialog>
-            <AlertDialogTrigger className="flex h-[48px] w-full" asChild>
+          <AlertDialogAction className="bg-inherit  hover:bg-inherit shadow-white">
+            <form action={onSubmit}>
               <Button
-                type="button" // Specify the type as "button" to prevent form submission
-                variant="ghost"
-                className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-red-600 hover:text-white hover:shadow-2xl md:flex-none md:justify-start md:p-2 md:px-3"
+                variant="outline"
+                className="w-full text-center text-black hover:bg-red-500 hover:text-white"
               >
                 <TrashIcon />
-                <div className="hidden md:block">Delete</div>
+                <div>Delete</div>
+                {"   "}
+                <AiOutlineLoading3Quarters
+                  className={cn("animate-spin", { hidden: !ispedding })}
+                />
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  You will this admin from RW Database!!!
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction className="bg-inherit  hover:bg-inherit shadow-white">
-                  <form action={onSubmit}>
-                    <Button
-                      variant="outline"
-                      className="w-full text-center text-black hover:bg-red-500 hover:text-white"
-                    >
-                      <TrashIcon />
-
-                      <div>Delete</div>
-                      {"   "}
-                      <AiOutlineLoading3Quarters
-                        className={cn("animate-spin", { hidden: !ispedding })}
-                      />
-                    </Button>
-                  </form>
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          );
+            </form>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

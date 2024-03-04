@@ -209,3 +209,5 @@ export async function readAdmin() {
   const supabase = await createSupbaseServerClient();
   return await supabase.from("Admin_permission").select("*,admin(*)");
 }
+
+export { createSupbaseServerClient };

@@ -53,7 +53,7 @@ export default function DeleteForm({
           className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-red-600 hover:text-white hover:shadow-2xl md:flex-none md:justify-start md:p-2 md:px-3"
         >
           <TrashIcon />
-          <div className="hidden md:block">Delete</div>
+          <div>Delete</div>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
