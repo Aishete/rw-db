@@ -18,6 +18,7 @@ export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "RW-Database",
   description: "A Database",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
