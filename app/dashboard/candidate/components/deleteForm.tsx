@@ -69,7 +69,7 @@ export default function DeleteForm({
             <form action={onSubmit}>
               <Button
                 variant="outline"
-                className="w-full text-center text-black hover:bg-red-500 hover:text-white"
+                className="w-full flex items-center gap-2 text-white bg-red-500 hover:bg-red-600 hover:text-white "
               >
                 <TrashIcon />
 

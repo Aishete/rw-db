@@ -33,31 +33,46 @@ async function fetchCandidate(): Promise<CandidatePer[]> {
 
 export default function Candidates() {
   const [data, setData] = useState<CandidatePer[]>([]);
+  const [isOffline, setIsOffline] = useState(false);
 
-  const fetchData = async () => {
-    // Try to load the data from IndexedDB first
+  const fetchCachedData = async () => {
     const cachedData = await localForage.getItem<CandidatePer[]>("Candidates");
     if (cachedData) {
       setData(cachedData);
     } else {
-      // If not found in cache, fetch from Supabase
-      const result = await fetchCandidate();
-      setData(result);
-      // And cache the data for future offline use
-      await localForage.setItem("Candidates", result);
+      setIsOffline(true);
     }
   };
 
+  const fetchFromDatabase = async () => {
+    const result = await fetchCandidate();
+    setData(result);
+    await localForage.setItem("Candidates", result);
+    setIsOffline(false);
+  };
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchCachedData();
+    fetchFromDatabase();
 
-  const columnsArray = columns(fetchData);
+    const interval = setInterval(() => {
+      if (!isOffline) {
+        fetchFromDatabase();
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [isOffline]);
+
+  const columnsArray = columns(fetchCachedData);
 
   return (
     <div className="space-y-5 w-full overflow-y-auto px-3">
       <h1 className="text-3xl font-bold">Candidate</h1>
-      <DataTable columns={columnsArray} data={data} fetchData={fetchData} />
+      <DataTable
+        columns={columnsArray}
+        data={data}
+        fetchData={fetchFromDatabase}
+      />
     </div>
   );
 }
