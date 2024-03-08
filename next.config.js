@@ -6,6 +6,7 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV !== "development", // Remove console.log in production
   },
 };
+
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public", // Destination directory for the PWA files
   disable: process.env.NODE_ENV === "development", // Disable PWA in development mode
@@ -17,7 +18,6 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   reloadOnOnline: true,
   extendDefaultRuntimeCaching: true,
   dynamicStartUrl: true,
-
   dynamicStartUrlRedirect: true,
   // Skip waiting for service worker activation
   runtimeCaching: [
@@ -30,55 +30,43 @@ const withPWA = require("@ducanh2912/next-pwa").default({
           maxEntries: 200,
           maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
         },
-        networkTimeoutSeconds: 10, // Optional: Set a timeout for network requests
-        fetchOptions: {
-          mode: "no-cors", // Optional: Set the fetch mode to 'no-cors' to handle failed requests
-        },
-      },
-    },
-    {
-      urlPattern: /^https?.*/,
-      handler: "CacheFirst",
-      options: {
-        cacheName: "offlineCache",
-        expiration: {
-          maxEntries: 200,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-        },
+        networkTimeoutSeconds: 10,
       },
     },
     {
       urlPattern: /\/dashboard\/admin/,
-      handler: "CacheFirst",
+      handler: "StaleWhileRevalidate",
       options: {
-        cacheName: "dashboardCandidateCache",
+        cacheName: "dashboardAdminCache",
         expiration: {
           maxEntries: 20,
           maxAgeSeconds: 7 * 24 * 60 * 60, // 7 Days
         },
+        networkTimeoutSeconds: 10, // Set network timeout
       },
     },
     {
       urlPattern: /\/dashboard\/candidate/,
-      handler: "CacheFirst",
+      handler: "StaleWhileRevalidate",
       options: {
         cacheName: "dashboardCandidateCache",
         expiration: {
           maxEntries: 20,
           maxAgeSeconds: 7 * 24 * 60 * 60, // 7 Days
         },
+        networkTimeoutSeconds: 10, // Set network timeout
       },
     },
-
     {
       urlPattern: /\/dashboard\/recruiter/,
-      handler: "CacheFirst",
+      handler: "StaleWhileRevalidate",
       options: {
-        cacheName: "dashboardCandidateCache",
+        cacheName: "dashboardRecruiterCache",
         expiration: {
           maxEntries: 20,
           maxAgeSeconds: 7 * 24 * 60 * 60, // 7 Days
         },
+        networkTimeoutSeconds: 10, // Set network timeout
       },
     },
   ],

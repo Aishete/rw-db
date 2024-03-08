@@ -132,6 +132,7 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
             description: <code className="text-white">{error.message}</code>,
           });
         } else {
+          document.getElementById("create-trigger")?.click();
           toast({
             variant: "success",
             title: "Successfully update Candidate!",
@@ -158,10 +159,9 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
   const handleProvinceSelect = (provinceValue: string) => {
     setSelectedProvince(provinceValue);
   };
-  const [open, setOpen] = React.useState(false);
 
   const [openProvince, setOpenProvince] = useState(false);
-  const [openDistrict, setOpenDistrict] = useState(true);
+  const [openDistrict, setOpenDistrict] = useState(false);
   const [openCender, setOpenCender] = useState(false);
 
   return (
@@ -489,14 +489,15 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
               )}
             />
           </div>
-        </div>
-        <div className="mt-6 flex justify-end gap-4">
-          <Button type="submit">
-            Update
-            <AiOutlineLoading3Quarters
-              className={cn("animate-spin", { hidden: !ispedding })}
-            />
-          </Button>
+          <div className="mt-6 flex justify-end gap-4">
+            <Button type="submit">
+              Update
+              <AiOutlineLoading3Quarters
+                className={cn("animate-spin", { hidden: !ispedding })}
+              />
+            </Button>
+          </div>
+          <div className="mb-4"></div>
         </div>
       </form>
     </Form>
@@ -597,6 +598,7 @@ export function UpdateCreateFormAdmin({
             description: <code className="text-white">{error.message}</code>,
           });
         } else {
+          document.getElementById("create-trigger")?.click();
           toast({
             variant: "success",
             title: "Successfully update Candidate!",
@@ -625,7 +627,7 @@ export function UpdateCreateFormAdmin({
   };
 
   const [openProvince, setOpenProvince] = useState(false);
-  const [openDistrict, setOpenDistrict] = useState(true);
+  const [openDistrict, setOpenDistrict] = useState(false);
   const [openCender, setOpenCender] = useState(false);
 
   return (

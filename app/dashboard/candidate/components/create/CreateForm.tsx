@@ -57,7 +57,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useTransition } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { recruiter } from "@/lib/type";
-import { readRecruiter } from "@/app/dashboard/recruiter/actions";
 
 const FormSchema = z.object({
   referral: z.string().min(2, {
@@ -91,12 +90,60 @@ interface AdminFormProps {
   fetchData: () => void;
 }
 export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
-  const [ispedding, startTransition] = useTransition();
-  const roles = ["Recruiter"];
-  const status = ["active", "resigned"];
+  const [isPanding, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const [recruiters, setRecruiters] = useState<recruiter[]>([]);
+
+  useEffect(() => {
+    const fetchRecruiters = async () => {
+      try {
+        const { data, error } = await readrecruiter();
+        if (error) {
+          console.error("Failed to fetch recruiters:", error.message);
+        } else if (data) {
+          setRecruiters(data); // Set state here
+        }
+      } catch (error) {
+        console.error("Failed to fetch recruiters:", (error as Error)?.message);
+      }
+    };
+
+    fetchRecruiters();
+  }, []);
+  const FormSchemaAdmin = z.object({
+    referral: z.string().min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+    candidatenameeng: z.string().min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+    candidatenamekh: z.string().min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+    gender: z.enum(["Male", "Female"], {
+      required_error: "District is required",
+    }),
+    phone: z.string({
+      required_error: "District is required",
+    }),
+    dateOfbirth: z.date({
+      required_error: "District is required",
+    }),
+    province: z.string({
+      required_error: "District is required",
+    }),
+    district: z.string({
+      required_error: "District is required",
+    }),
+    commune: z.string({
+      required_error: "Commune is required",
+    }),
+    village: z.string({
+      required_error: "Commune is required",
+    }),
+  });
+  const form = useForm<z.infer<typeof FormSchemaAdmin>>({
+    resolver: zodResolver(FormSchemaAdmin),
     defaultValues: {
       referral: "",
       candidatenameeng: "",
@@ -110,7 +157,7 @@ export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
       village: "",
     },
   });
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = (data: z.infer<typeof FormSchemaAdmin>) => {
     startTransition(async () => {
       try {
         const result = await createCandidate(data);
@@ -123,14 +170,11 @@ export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
           });
         } else {
           document.getElementById("create-trigger")?.click();
+
           toast({
             variant: "success",
             title: "Successfully created Candidate!",
           });
-
-          if (onSuccess) {
-            onSuccess();
-          }
           fetchData();
         }
       } catch (e) {
@@ -153,7 +197,6 @@ export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
   const handleProvinceSelect = (provinceValue: string) => {
     setSelectedProvince(provinceValue);
   };
-  const [open, setOpen] = React.useState(false);
 
   const [openProvince, setOpenProvince] = useState(false);
   const [openDistrict, setOpenDistrict] = useState(false);
@@ -177,6 +220,7 @@ export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
               </FormItem>
             )}
           />
+
           {/* <FormField
               control={form.control}
               name="recuitercode"
@@ -496,11 +540,11 @@ export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
             />
           </div>
         </div>
-        <div className="mt-6 flex justify-end gap-4 mb-4">
+        <div className="mt-6 flex justify-end gap-4 ">
           <Button type="submit">
             Submit
             <AiOutlineLoading3Quarters
-              className={cn("animate-spin", { hidden: !ispedding })}
+              className={cn("animate-spin", { hidden: !isPanding })}
             />
           </Button>
         </div>
@@ -509,8 +553,9 @@ export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
     </Form>
   );
 }
+
 export function CreateFormByAdmin({ fetchData }: { fetchData: () => void }) {
-  const [ispedding, startTransition] = useTransition();
+  const [isPanding, startTransition] = useTransition();
 
   const [recruiters, setRecruiters] = useState<recruiter[]>([]);
 
@@ -584,6 +629,7 @@ export function CreateFormByAdmin({ fetchData }: { fetchData: () => void }) {
           });
         } else {
           document.getElementById("create-trigger")?.click();
+
           toast({
             variant: "success",
             title: "Successfully created Candidate!",
@@ -1017,7 +1063,7 @@ export function CreateFormByAdmin({ fetchData }: { fetchData: () => void }) {
           <Button type="submit">
             Submit
             <AiOutlineLoading3Quarters
-              className={cn("animate-spin", { hidden: !ispedding })}
+              className={cn("animate-spin", { hidden: !isPanding })}
             />
           </Button>
         </div>

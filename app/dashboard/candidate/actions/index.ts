@@ -29,34 +29,7 @@ export async function createCandidate(data: {
   commune: string;
   village: string;
 }) {
-  const { data: userSession } = await readUserSession();
-
-  // if (
-  //   userSession.session?.user.user_metadata.role !== "Super-Admin" &&
-  //   userSession.session?.user.user_metadata.role !== "Admin"
-  // ) {
-  //   throw new Error(
-  //     "You do not have permission to create an Recroiter, contact your super admin or admin."
-  //   );
-  // }
-
   const supabase = await createSupbaseServerClient();
-
-  // const { data: user, error: createUserError } =
-  //   await supabase.auth.admin.createUser({
-  //     email: data.email,
-  //     password: data.password,
-  //     email_confirm: true,
-  //     user_metadata: {
-  //       role: data.role,
-  //       name: data.name,
-  //       email: data.email,
-  //     },
-  //   });
-
-  // if (createUserError) {
-  //   throw createUserError;
-  // }
 
   const { error: insertCandidateError } = await supabase
     .from("Candidates")
