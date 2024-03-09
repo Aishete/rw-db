@@ -1,0 +1,63 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
+import React, { ReactNode } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+export default function DailogForm({
+  Trigger,
+  id,
+  title,
+  form,
+}: {
+  title: string;
+  Trigger: ReactNode;
+  id: string;
+  form: ReactNode;
+}) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild id={id}>
+        {Trigger}
+      </SheetTrigger>
+      <SheetContent className="w-full sm:w-[350px]">
+        <ScrollArea className="max-h-screen overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>{title}</SheetTitle>
+            <SheetDescription>
+              Make changes to your profile here. Click save when done.
+            </SheetDescription>
+          </SheetHeader>
+          {form}
+        </ScrollArea>
+      </SheetContent>
+    </Sheet>
+    // <Dialog>
+    //   <DialogTrigger asChild id={id}>
+    //     {Trigger}
+    //   </DialogTrigger>
+    //   <DialogContent className="sm:max-w-[525px] dark:bg-graident-dark">
+    //     <DialogHeader>
+    //       <DialogTitle>{title}</DialogTitle>
+    //       <DialogDescription>
+    //         Make changes to your profile here. Click save when
+    //       </DialogDescription>
+    //     </DialogHeader>
+    //     {form}
+    //   </DialogContent>
+    // </Dialog>
+  );
+}

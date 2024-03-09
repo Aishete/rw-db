@@ -13,8 +13,7 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { province, district } from "../formProvince";
-import { recruiter } from "@/lib/type";
-import { readrecruiter } from "../../actions";
+
 import {
   Form,
   FormControl,
@@ -50,14 +49,14 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import {
-  updateCandidateRecruiterByAdminId,
-  updateCandidateRecruiterById,
+  createCandidate,
+  createCandidateByAdmin,
+  readrecruiter,
 } from "../../actions";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-
 import { useTransition } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { CandidatePer } from "@/lib/type";
+import { recruiter } from "@/lib/type";
 
 const FormSchema = z.object({
   referral: z.string().min(2, {
@@ -82,48 +81,86 @@ const FormSchema = z.object({
     required_error: "Commune is required",
   }),
   village: z.string(),
+  recruiter_code: z.string(),
+  recruiter_name: z.string(),
 });
 
-interface Candidateprom {
-  Candidates: CandidatePer;
+interface AdminFormProps {
+  onSuccess?: () => void;
   fetchData: () => void;
 }
-export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
-  const [ispedding, startTransition] = useTransition();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
+  const [isPanding, startTransition] = useTransition();
+
+  const [recruiters, setRecruiters] = useState<recruiter[]>([]);
+
+  useEffect(() => {
+    const fetchRecruiters = async () => {
+      try {
+        const { data, error } = await readrecruiter();
+        if (error) {
+          console.error("Failed to fetch recruiters:", error.message);
+        } else if (data) {
+          setRecruiters(data); // Set state here
+        }
+      } catch (error) {
+        console.error("Failed to fetch recruiters:", (error as Error)?.message);
+      }
+    };
+
+    fetchRecruiters();
+  }, []);
+  const FormSchemaAdmin = z.object({
+    referral: z.string().min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+    candidatenameeng: z.string().min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+    candidatenamekh: z.string().min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+    gender: z.enum(["Male", "Female"], {
+      required_error: "District is required",
+    }),
+    phone: z.string({
+      required_error: "District is required",
+    }),
+    dateOfbirth: z.date({
+      required_error: "District is required",
+    }),
+    province: z.string({
+      required_error: "District is required",
+    }),
+    district: z.string({
+      required_error: "District is required",
+    }),
+    commune: z.string({
+      required_error: "Commune is required",
+    }),
+    village: z.string({
+      required_error: "Commune is required",
+    }),
+  });
+  const form = useForm<z.infer<typeof FormSchemaAdmin>>({
+    resolver: zodResolver(FormSchemaAdmin),
     defaultValues: {
-      referral: Candidates.referral,
-      candidatenameeng: Candidates.candidatenameeng,
-      candidatenamekh: Candidates.candidatenamekh,
-      gender: Candidates.gender,
-      dateOfbirth: new Date(Candidates.dateOfbirth), // month is 0-based, so 0 is January
-      phone: Candidates.phone,
-      province: Candidates.province,
-      district: Candidates.district,
-      commune: Candidates.commune,
-      village: Candidates.village,
+      referral: "",
+      candidatenameeng: "",
+      candidatenamekh: "",
+      gender: "Male",
+      dateOfbirth: new Date(1, 20, 2000), // month is 0-based, so 0 is January
+      phone: "",
+      province: "",
+      district: "",
+      commune: "",
+      village: "",
     },
   });
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = (data: z.infer<typeof FormSchemaAdmin>) => {
     startTransition(async () => {
       try {
-        const dateOfBirthDate = new Date(data.dateOfbirth);
-        if (dateOfBirthDate.toString() === "Invalid Date") {
-          setErrorMessage("Invalid date of birth");
-          return;
-        }
-        const updatedValues = {
-          ...data,
-          dateOfbirth: dateOfBirthDate,
-        };
-        const result = FormSchema.safeParse(updatedValues);
-        if (!result.success) {
-          // Handle validation errors
-          console.error(result.error);
-          return;
-        }
-        await updateCandidateRecruiterById(Candidates.id, updatedValues);
+        const result = await createCandidate(data);
         const { error } = JSON.parse(JSON.stringify(result));
         if (error?.message) {
           toast({
@@ -132,9 +169,11 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
             description: <code className="text-white">{error.message}</code>,
           });
         } else {
+          document.getElementById("create-trigger")?.click();
+
           toast({
             variant: "success",
-            title: "Successfully update Candidate!",
+            title: "Successfully created Candidate!",
           });
           fetchData();
         }
@@ -181,6 +220,35 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
               </FormItem>
             )}
           />
+
+          {/* <FormField
+              control={form.control}
+              name="recuitercode"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Recurter Code</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Recurter Code" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+          {/* <FormField
+              control={form.control}
+              name="recuitername"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Recuiter Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter a Name" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
         </div>
         <div className="border-b border-gray-900/10 pb-2">
           <div>
@@ -261,12 +329,8 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
                       <div className="relative w-[280px]">
                         <Input
                           placeholder="MM/DD/YYYY"
-                          {...field}
-                          value={
-                            stringDate || field.value
-                              ? format(new Date(field.value), "MM/dd/yyyy")
-                              : ""
-                          }
+                          type="string"
+                          value={stringDate}
                           aria-expanded={openCender}
                           onChange={(e) => {
                             setStringDate(e.target.value);
@@ -326,77 +390,65 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
             />
             <FormField
               name="province"
-              render={({ field }) => {
-                // Open the district selection if a province is already selected
-                if (field.value) {
-                  setSelectedProvince(field.value);
-                }
-
-                return (
-                  <FormItem className="w-full">
-                    <FormLabel>Province</FormLabel>
-                    <div>
-                      <Popover
-                        open={openProvince}
-                        onOpenChange={setOpenProvince}
-                      >
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              aria-expanded={openProvince}
-                              className="w-[200px] justify-between"
-                            >
-                              {field.value
-                                ? province.find((p) => p.value === field.value)
-                                    ?.label
-                                : "Select Province"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search provinces..." />
-                            <CommandEmpty>No provinces found.</CommandEmpty>
-                            <CommandGroup>
-                              <ScrollArea className="h-72 w-48 rounded-md border">
-                                {province.map((provinceItem) => (
-                                  <CommandItem
-                                    key={provinceItem.value}
-                                    value={provinceItem.label}
-                                    onSelect={() => {
-                                      field.onChange(
-                                        handleProvinceSelect(provinceItem.value)
-                                      );
-                                      form.setValue(
-                                        "province",
-                                        provinceItem.value
-                                      );
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Province</FormLabel>
+                  <div>
+                    <Popover open={openProvince} onOpenChange={setOpenProvince}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openProvince}
+                            className="w-[200px] justify-between"
+                          >
+                            {field.value
+                              ? province.find((p) => p.value === field.value)
+                                  ?.label
+                              : "Select Province"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search provinces..." />
+                          <CommandEmpty>No provinces found.</CommandEmpty>
+                          <CommandGroup>
+                            <ScrollArea className="h-72 w-48 rounded-md border">
+                              {province.map((province) => (
+                                <CommandItem
+                                  key={province.value}
+                                  value={province.label}
+                                  onSelect={() => {
+                                    field.onChange(
+                                      handleProvinceSelect(province.value)
+                                    ),
+                                      form.setValue("province", province.value),
                                       setOpenProvince(false);
-                                    }}
-                                  >
-                                    <Check
-                                      className={`mr-2 h-4 w-4 ${
-                                        provinceItem.value === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      }`}
-                                    />
-                                    {provinceItem.label}
-                                  </CommandItem>
-                                ))}
-                              </ScrollArea>
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </FormItem>
-                );
-              }}
+                                  }}
+                                >
+                                  <Check
+                                    className={`mr-2 h-4 w-4 ${
+                                      province.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }`}
+                                  />
+                                  {province.label}
+                                </CommandItem>
+                              ))}
+                            </ScrollArea>
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </FormItem>
+              )}
             />
+
             <FormField
               name="district"
               render={({ field }) => (
@@ -428,8 +480,7 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
                           <CommandGroup>
                             <ScrollArea className="h-72 w-48 rounded-md border">
                               {selectedProvince &&
-                                district[selectedProvince] &&
-                                district[selectedProvince].map(
+                                district[selectedProvince]?.map(
                                   (districtName) => (
                                     <CommandItem
                                       key={districtName}
@@ -488,25 +539,24 @@ export default function CreateForm({ Candidates, fetchData }: Candidateprom) {
               )}
             />
           </div>
-          <div className="mt-6 flex justify-end gap-4">
-            <Button type="submit">
-              Update
-              <AiOutlineLoading3Quarters
-                className={cn("animate-spin", { hidden: !ispedding })}
-              />
-            </Button>
-          </div>
-          <div className="mb-4"></div>
         </div>
+        <div className="mt-6 flex justify-end gap-4 ">
+          <Button type="submit">
+            Submit
+            <AiOutlineLoading3Quarters
+              className={cn("animate-spin", { hidden: !isPanding })}
+            />
+          </Button>
+        </div>
+        <div className="mb-4"></div>
       </form>
     </Form>
   );
 }
-export function UpdateCreateFormAdmin({
-  Candidates,
-  fetchData,
-}: Candidateprom) {
-  const [ispedding, startTransition] = useTransition();
+
+export function CreateFormByAdmin({ fetchData }: { fetchData: () => void }) {
+  const [isPanding, startTransition] = useTransition();
+
   const [recruiters, setRecruiters] = useState<recruiter[]>([]);
 
   useEffect(() => {
@@ -551,44 +601,25 @@ export function UpdateCreateFormAdmin({
     village: z.string(),
   });
   const form = useForm<z.infer<typeof FormSchemaAdmin>>({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(FormSchemaAdmin),
     defaultValues: {
-      referral: Candidates.referral,
-      candidatenameeng: Candidates.candidatenameeng,
-      candidatenamekh: Candidates.candidatenamekh,
-      gender: Candidates.gender,
-      dateOfbirth: new Date(Candidates.dateOfbirth), // month is 0-based, so 0 is January
-      phone: Candidates.phone,
-      province: Candidates.province,
-      district: Candidates.district,
-      commune: Candidates.commune,
-      village: Candidates.village,
-      recruiterCID: Candidates.recruiterCID,
+      referral: "",
+      candidatenameeng: "",
+      candidatenamekh: "",
+      gender: "Male",
+      dateOfbirth: new Date(1, 20, 2000), // month is 0-based, so 0 is January
+      phone: "",
+      province: "",
+      district: "",
+      commune: "",
+      village: "",
+      recruiterCID: "",
     },
   });
   const onSubmit = (data: z.infer<typeof FormSchemaAdmin>) => {
     startTransition(async () => {
-      const recruiterCID = form.getValues("recruiterCID");
-      data = { ...data, recruiterCID };
       try {
-        const dateOfBirthDate = new Date(data.dateOfbirth);
-        if (dateOfBirthDate.toString() === "Invalid Date") {
-          setErrorMessage("Invalid date of birth");
-          return;
-        }
-        const updatedValues = {
-          ...data,
-          dateOfbirth: dateOfBirthDate,
-          recruiterCID: data.recruiterCID,
-        };
-
-        const result = FormSchema.safeParse(updatedValues);
-        if (!result.success) {
-          // Handle validation errors
-          console.error(result.error);
-          return;
-        }
-        await updateCandidateRecruiterByAdminId(Candidates.id, updatedValues);
+        const result = await createCandidateByAdmin(data);
         const { error } = JSON.parse(JSON.stringify(result));
         if (error?.message) {
           toast({
@@ -597,10 +628,13 @@ export function UpdateCreateFormAdmin({
             description: <code className="text-white">{error.message}</code>,
           });
         } else {
+          document.getElementById("create-trigger")?.click();
+
           toast({
             variant: "success",
-            title: "Successfully update Candidate!",
+            title: "Successfully created Candidate!",
           });
+
           fetchData();
         }
       } catch (e) {
@@ -623,6 +657,7 @@ export function UpdateCreateFormAdmin({
   const handleProvinceSelect = (provinceValue: string) => {
     setSelectedProvince(provinceValue);
   };
+  const [open, setOpen] = React.useState(false);
 
   const [openProvince, setOpenProvince] = useState(false);
   const [openDistrict, setOpenDistrict] = useState(false);
@@ -630,10 +665,7 @@ export function UpdateCreateFormAdmin({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full space-y-6 h-full"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <div className="border-b border-gray-900/10 ">
           <FormField
             control={form.control}
@@ -649,66 +681,94 @@ export function UpdateCreateFormAdmin({
               </FormItem>
             )}
           />
-        </div>
+          <FormField
+            control={form.control}
+            name="recruiterCID"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Recruiter Name</FormLabel>
+                <div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={openProvince}
+                          className="w-[200px] justify-between"
+                        >
+                          {field.value
+                            ? recruiters.find((r) => r.id === field.value)
+                                ?.recruiter_name
+                            : "Select Recruiter"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search recruiters..." />
+                        <CommandEmpty>No recruiters found.</CommandEmpty>
+                        <CommandGroup>
+                          <ScrollArea className="h-72 w-48 rounded-md border">
+                            {recruiters.map((recruiter) => (
+                              <CommandItem
+                                key={recruiter.id}
+                                value={recruiter.recruiter_name}
+                                onSelect={() => {
+                                  field.onChange(recruiter.id),
+                                    form.setValue("recruiterCID", recruiter.id);
+                                }}
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${
+                                    recruiter.id === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  }`}
+                                />
+                                {recruiter.recruiter_name}
+                              </CommandItem>
+                            ))}
+                          </ScrollArea>
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="recruiterCID"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Recruiter Name</FormLabel>
-              <div>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={openProvince}
-                        className="w-[200px] justify-between"
-                      >
-                        {field.value
-                          ? recruiters.find((r) => r.id === field.value)
-                              ?.recruiter_name
-                          : "Select Recruiter"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Search recruiters..." />
-                      <CommandEmpty>No recruiters found.</CommandEmpty>
-                      <CommandGroup>
-                        <ScrollArea className="h-72 w-48 rounded-md border">
-                          {recruiters.map((recruiter) => (
-                            <CommandItem
-                              key={recruiter.id}
-                              value={recruiter.recruiter_name}
-                              onSelect={() => {
-                                field.onChange(recruiter.id);
-                                form.setValue("recruiterCID", recruiter.id);
-                              }}
-                            >
-                              <Check
-                                className={`mr-2 h-4 w-4 ${
-                                  recruiter.id === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                }`}
-                              />
-                              {recruiter.recruiter_name}
-                            </CommandItem>
-                          ))}
-                        </ScrollArea>
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </FormItem>
-          )}
-        />
+          {/* <FormField
+              control={form.control}
+              name="recuitercode"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Recurter Code</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Recurter Code" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+          {/* <FormField
+              control={form.control}
+              name="recuitername"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Recuiter Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter a Name" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+        </div>
         <div className="border-b border-gray-900/10 pb-2">
           <div>
             <FormField
@@ -788,12 +848,8 @@ export function UpdateCreateFormAdmin({
                       <div className="relative w-[280px]">
                         <Input
                           placeholder="MM/DD/YYYY"
-                          {...field}
-                          value={
-                            stringDate || field.value
-                              ? format(new Date(field.value), "MM/dd/yyyy")
-                              : ""
-                          }
+                          type="string"
+                          value={stringDate}
                           aria-expanded={openCender}
                           onChange={(e) => {
                             setStringDate(e.target.value);
@@ -853,77 +909,65 @@ export function UpdateCreateFormAdmin({
             />
             <FormField
               name="province"
-              render={({ field }) => {
-                // Open the district selection if a province is already selected
-                if (field.value) {
-                  setSelectedProvince(field.value);
-                }
-
-                return (
-                  <FormItem className="w-full">
-                    <FormLabel>Province</FormLabel>
-                    <div>
-                      <Popover
-                        open={openProvince}
-                        onOpenChange={setOpenProvince}
-                      >
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              aria-expanded={openProvince}
-                              className="w-[200px] justify-between"
-                            >
-                              {field.value
-                                ? province.find((p) => p.value === field.value)
-                                    ?.label
-                                : "Select Province"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search provinces..." />
-                            <CommandEmpty>No provinces found.</CommandEmpty>
-                            <CommandGroup>
-                              <ScrollArea className="h-72 w-48 rounded-md border">
-                                {province.map((provinceItem) => (
-                                  <CommandItem
-                                    key={provinceItem.value}
-                                    value={provinceItem.label}
-                                    onSelect={() => {
-                                      field.onChange(
-                                        handleProvinceSelect(provinceItem.value)
-                                      );
-                                      form.setValue(
-                                        "province",
-                                        provinceItem.value
-                                      );
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Province</FormLabel>
+                  <div>
+                    <Popover open={openProvince} onOpenChange={setOpenProvince}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openProvince}
+                            className="w-[200px] justify-between"
+                          >
+                            {field.value
+                              ? province.find((p) => p.value === field.value)
+                                  ?.label
+                              : "Select Province"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search provinces..." />
+                          <CommandEmpty>No provinces found.</CommandEmpty>
+                          <CommandGroup>
+                            <ScrollArea className="h-72 w-48 rounded-md border">
+                              {province.map((province) => (
+                                <CommandItem
+                                  key={province.value}
+                                  value={province.label}
+                                  onSelect={() => {
+                                    field.onChange(
+                                      handleProvinceSelect(province.value)
+                                    ),
+                                      form.setValue("province", province.value),
                                       setOpenProvince(false);
-                                    }}
-                                  >
-                                    <Check
-                                      className={`mr-2 h-4 w-4 ${
-                                        provinceItem.value === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      }`}
-                                    />
-                                    {provinceItem.label}
-                                  </CommandItem>
-                                ))}
-                              </ScrollArea>
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </FormItem>
-                );
-              }}
+                                  }}
+                                >
+                                  <Check
+                                    className={`mr-2 h-4 w-4 ${
+                                      province.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }`}
+                                  />
+                                  {province.label}
+                                </CommandItem>
+                              ))}
+                            </ScrollArea>
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </FormItem>
+              )}
             />
+
             <FormField
               name="district"
               render={({ field }) => (
@@ -955,8 +999,7 @@ export function UpdateCreateFormAdmin({
                           <CommandGroup>
                             <ScrollArea className="h-72 w-48 rounded-md border">
                               {selectedProvince &&
-                                district[selectedProvince] &&
-                                district[selectedProvince].map(
+                                district[selectedProvince]?.map(
                                   (districtName) => (
                                     <CommandItem
                                       key={districtName}
@@ -1015,16 +1058,16 @@ export function UpdateCreateFormAdmin({
               )}
             />
           </div>
-          <div className="mt-6 flex justify-end gap-4">
-            <Button type="submit">
-              Update
-              <AiOutlineLoading3Quarters
-                className={cn("animate-spin", { hidden: !ispedding })}
-              />
-            </Button>
-          </div>
-          <div className="mb-4"></div>
         </div>
+        <div className="mt-6 flex justify-end gap-4 ">
+          <Button type="submit">
+            Submit
+            <AiOutlineLoading3Quarters
+              className={cn("animate-spin", { hidden: !isPanding })}
+            />
+          </Button>
+        </div>
+        <div className="mb-4"></div>
       </form>
     </Form>
   );
