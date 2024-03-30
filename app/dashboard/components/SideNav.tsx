@@ -7,10 +7,10 @@ import { SignOut } from "./alertbox";
 import { useUserStore } from "@/lib/store/user";
 import NavRecruiterLinks from "./Recuitertable";
 import { SignOutform } from "./SignOut";
+import { redirect } from "next/navigation";
 export default function SideNav() {
   return <SideBar className=" hidden lg:block dark:bg-graident-dark flex-1" />;
 }
-
 export const SideBar = ({ className }: { className?: string }) => {
   const user = useUserStore.getState().user;
   const isUserHaveAccess =
@@ -19,6 +19,7 @@ export const SideBar = ({ className }: { className?: string }) => {
   const isUserHavenotAccess =
     user?.user_metadata.role !== "Admin" &&
     user?.user_metadata.role !== "Super-Admin";
+
   return (
     <div className={className}>
       <div

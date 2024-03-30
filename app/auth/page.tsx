@@ -1,19 +1,33 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import AuthForm from "./components/AuthForm";
-import { readUserSession } from "@/lib/actions";
+import { fetchUserMetadata } from "./usermatadata";
 import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { string } from "zod";
 
-export default async function page() {
-  const { data: userSession } = await readUserSession();
-  console.log(userSession.session?.user.user_metadata.role);
-  if (userSession.session?.user.user_metadata.role === "Recruiter") {
-    return redirect("/dashboard/candidate");
-  } else if (
-    userSession.session?.user.user_metadata.role === "Admin" ||
-    userSession.session?.user.user_metadata.role === "Super-Admin"
-  ) {
-    return redirect("/dashboard/admin");
-  }
+export default function Page() {
+  const router = useRouter();
+  useEffect(() => {
+    const fetchData = async () => {
+      const usermetadata2 = await fetchUserMetadata();
+
+      try {
+        if (usermetadata2?.role === "Recruiter") {
+          router.push("/dashboard/candidate");
+        } else if (
+          usermetadata2?.role === "Admin" ||
+          usermetadata2?.role === "Super-Admin"
+        ) {
+          router.push("/dashboard/admin");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="flex items-center justify-center h-screen">
       <AuthForm />

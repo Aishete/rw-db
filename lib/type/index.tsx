@@ -56,3 +56,8 @@ export type recruiter = {
   recruiter_code: string;
   recruiter_name: string;
 };
+export type user_metadata = {
+  name: string;
+  email: string;
+  role: "Super-Admin" | "Admin" | "Recruiter";
+};

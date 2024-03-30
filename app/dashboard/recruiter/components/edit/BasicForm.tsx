@@ -56,7 +56,7 @@ export default function BasicForm({
 
         if (result !== undefined) {
           const { error } = JSON.parse(JSON.stringify(result));
-          if (error?.message) {
+          if (error && error.message) {
             toast({
               variant: "destructive",
               title: "Fail to Update Name!",
@@ -69,10 +69,7 @@ export default function BasicForm({
             });
             fetchData();
           }
-          // Call fetchData regardless of whether an error occurred
         } else {
-          // Handle the case where result is undefined
-          console.log(result);
           toast({
             variant: "destructive",
             title: "Error!",

@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { province, district } from "../formProvince";
-
+import localforage from "localforage";
 import {
   Form,
   FormControl,
@@ -92,24 +92,6 @@ interface AdminFormProps {
 export default function CreateForm({ onSuccess, fetchData }: AdminFormProps) {
   const [isPanding, startTransition] = useTransition();
 
-  const [recruiters, setRecruiters] = useState<recruiter[]>([]);
-
-  useEffect(() => {
-    const fetchRecruiters = async () => {
-      try {
-        const { data, error } = await readrecruiter();
-        if (error) {
-          console.error("Failed to fetch recruiters:", error.message);
-        } else if (data) {
-          setRecruiters(data); // Set state here
-        }
-      } catch (error) {
-        console.error("Failed to fetch recruiters:", (error as Error)?.message);
-      }
-    };
-
-    fetchRecruiters();
-  }, []);
   const FormSchemaAdmin = z.object({
     referral: z.string().min(2, {
       message: "Username must be at least 2 characters.",
@@ -566,6 +548,7 @@ export function CreateFormByAdmin({ fetchData }: { fetchData: () => void }) {
         if (error) {
           console.error("Failed to fetch recruiters:", error.message);
         } else if (data) {
+          await localforage.setItem("recruiters", data);
           setRecruiters(data); // Set state here
         }
       } catch (error) {

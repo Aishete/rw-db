@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -36,6 +36,7 @@ const FormSchema = z.object({
 });
 
 export default function AuthForm() {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -62,6 +63,7 @@ export default function AuthForm() {
         toast({
           title: "Successfully login 🎉",
         });
+        router.push("/dashboard");
       }
     });
   }

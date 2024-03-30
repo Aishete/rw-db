@@ -99,7 +99,6 @@ export async function updateRecruiterBasicById(
       throw error;
     } else {
     }
-    console.log(result);
 
     return { result }; // Return the updated data
   }

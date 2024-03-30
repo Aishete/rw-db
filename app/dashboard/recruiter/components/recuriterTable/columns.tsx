@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { Brole } from "@/app/dashboard/admin/actions";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -39,18 +40,30 @@ const ActionCell = ({
   fetchData: () => void;
 }) => {
   const RecruiterPer = row.original;
+  const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const userIsAdmin = await Brole();
+      setIsAdmin(!userIsAdmin);
+    };
+    fetchUserRole();
+  }, []);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
+        {isAdmin && (
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
         <EditRecruiter admins={RecruiterPer} fetchData={fetchData} />
         <DeleteForm user_id={RecruiterPer.recruiter_id} fetchData={fetchData} />
+
         <DropdownMenuSeparator />
         {/* <DropdownMenuItem>View Recruiter details</DropdownMenuItem> */}
       </DropdownMenuContent>

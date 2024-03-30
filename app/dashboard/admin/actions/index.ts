@@ -14,6 +14,19 @@ export async function role() {
     return useUserAccess;
   }
 }
+export async function Brole() {
+  const { data: userSession } = await readUserSession();
+  if (
+    userSession.session?.user.user_metadata.role === "Super-Admin" ||
+    userSession.session?.user.user_metadata.role === "Admin"
+  ) {
+    const useUserAccess = false;
+    return useUserAccess;
+  } else {
+    const useUserAccess = true;
+    return useUserAccess;
+  }
+}
 export async function createAdmin(data: {
   name: string;
   role: "Admin" | "Super-Admin";
