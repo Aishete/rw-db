@@ -1,5 +1,5 @@
 # RW-Database
-
+this project is hosting at [vercel](https://rw-db.vercel.app/)
 A HR system for internal use to record data about recruitment. It has the following functions:
 
     CRUD functionality
