@@ -8,13 +8,13 @@ import {
 } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDigEeOQ5TyyUGUj05kK7SAZm6x_tKfZWc",
-  authDomain: "rw-db-a2a96.firebaseapp.com",
-  projectId: "rw-db-a2a96",
-  storageBucket: "rw-db-a2a96.appspot.com",
-  messagingSenderId: "879678598925",
-  appId: "1:879678598925:web:81336e818f89d9869fca44",
-  measurementId: "G-1NSK34P57Q",
+  apiKey: process.env.apiKey,
+  authDomain: process.env.auth,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storage,
+  messagingSenderId: process.env.messageingid,
+  appId: process.env.apiId,
+  measurementId: process.env.measurementid,
 };
 
 import {
