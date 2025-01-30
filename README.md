@@ -1,56 +1,30 @@
-![Add a heading (13)](https://github.com/Chensokheng/next-supabase-dashboard/assets/52232579/8ffea2ac-0200-4bed-b87c-77d162d07b9e)
+# RW-Database
+this project is hosting at [vercel](https://rw-db.vercel.app/)
+A HR system for internal use to record data about recruitment. It has the following functions:
 
+    CRUD functionality
+    Filtering
+    Authorization
+    Role-based access control
+    Progressive Web App (PWA)
 
-## Getting Started
+Technology used:
 
-First, install the dependencies
+    Next.js
+    Next.pwa
+    Supabase
+    Vercel
 
-```bash
-npm i
-```
-then run the development server:
+Programming Language:
 
+    TypeScript
+    Tailwind CSS
 
-```bash
-npm run dev
-```
+JavaScript Library:
 
-## Check list
--   [ ] setup supbase fill env.sample
--   [ ] create developer user
--   [ ] handle create user using service role
--   [ ] Prevent UI from none admin
--   [ ] update create user for only admin to create only
--   [ ] read user
--   [ ] update user
--   [ ] delete user
+    React
 
-## Tables
+UI Library:
 
-```sh
-permission_table:{
-    id: uuid,
-    role: text,
-    status: text, (active,resigned),
-    created_at: date,
-    member_id: uuid
-}
-```
-
-```sh
-member_table:{
-    id: uuid,
-    name: text,
-    created_at: date,
-}
-```
-
-```sh
-todo_table:{
-    id: uuid,
-    title: text,
-    completed: boolean,
-    created_at: date,
-    created_by: uuid (foreign_key member_id)
-}
-```
+    Shadcn
+    Tanstack
